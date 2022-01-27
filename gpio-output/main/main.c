@@ -23,22 +23,28 @@
 // ESP32 Libraries
 #include "driver/gpio.h"
 
-// define GPIO pin
-#define LED_GPIO 3     // GPIO3
+//pin definitions
+#define LED_PIN_1 1
+#define LED_PIN_2 2
 
-//main function
 void app_main(void)
 {
-    //configure GPIO as output
-    gpio_pad_select_gpio(LED_GPIO);                 // select GPIO number
-    gpio_set_direction(LED_GPIO, GPIO_MODE_OUTPUT); // set direction as output
+    //configure GPIO1 as output
+    gpio_pad_select_gpio(LED_PIN_1);                    //select LED_PIN_1 as GPIO
+    gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);    //set LED_PIN_1 as output
+
+    gpio_pad_select_gpio(LED_PIN_2);                    //select LED_PIN_2 as GPIO
+    gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);    //set LED_PIN_2 as output
 
     while(1) //infinite loop
     {
-        gpio_set_level(LED_GPIO, 1);            // turn on LED
-        vTaskDelay(1000 / portTICK_PERIOD_MS);  // delay for 1 second
-        gpio_set_level(LED_GPIO, 0);            // turn off LED
-        vTaskDelay(1000 / portTICK_PERIOD_MS);  // delay for 1 second
-        printf("Blink\n");                      // print message on console
+        gpio_set_level(LED_PIN_1, 1);                   //turn LED_PIN_1 on
+        gpio_set_level(LED_PIN_2, 0);                   //turn LED_PIN_2 off
+        printf("LED ON\n");                             //print message on console
+        vTaskDelay(1000 / portTICK_PERIOD_MS);          //delay 1 second
+        gpio_set_level(LED_PIN_1, 0);                   //turn LED_PIN_1 off
+        gpio_set_level(LED_PIN_2, 1);                   //turn LED_PIN_2 on    
+        printf("LED OFF\n");                            //print message on console
+        vTaskDelay(1000 / portTICK_PERIOD_MS);          //delay 1 second
     }
 }
