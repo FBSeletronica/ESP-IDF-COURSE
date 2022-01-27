@@ -24,33 +24,33 @@
 #include "esp_log.h"
 
 //pins map
-#define LED 3       // GPIO3
-#define BUTTON 6   //GPIO6
+#define LED_PIN_1 1     //GPIO1
+#define LED_PIN_2 2     //GPIO2
+#define BUTTON_PIN 6    //GPIO6
 
 //main function
 void app_main(void)
 {
-    //configure LED GPIO as input
-    gpio_pad_select_gpio(LED);                  // select GPIO number
-    gpio_set_direction(LED, GPIO_MODE_OUTPUT);  // set direction as output
+    //configure LED_PIN_1 GPIO as input
+    gpio_pad_select_gpio(LED_PIN_1);                    //select LED_PIN_1 as GPIO
+    gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);   //set LED_PIN_1 as output
 
-    //configure button GPIO as input
-    gpio_pad_select_gpio(BUTTON);                   // select GPIO number
-    gpio_set_direction(BUTTON, GPIO_MODE_INPUT);    // set direction as input 
-    gpio_pullup_en(BUTTON);                         // enable pull-up resistor
-    gpio_pulldown_dis(BUTTON);                      // disable pull-down resistor
+    //configure button_PIN GPIO as input
+    gpio_pad_select_gpio(BUTTON_PIN);                   //select BUTTON_PIN as GPIO
+    gpio_set_direction(BUTTON_PIN, GPIO_MODE_INPUT);    //set BUTTON_PIN as input
+    gpio_set_pull_mode(BUTTON_PIN, GPIO_PULLUP_ONLY);   //set pull-up resistor
 
     while(true) //infinite loop
     {
        
-        if(gpio_get_level(BUTTON) == 0)             // if button is pressed
+        if(gpio_get_level(BUTTON_PIN) == 0)         // if button is pressed
         {
-            gpio_set_level(LED, 1);                 // turn on LED    
+            gpio_set_level(LED_PIN_1, 1);           // turn on LED    
             ESP_LOGI("Button", "Button pressed");   // print message on console
         }
         else                                        // if button is not pressed
         {
-            gpio_set_level(LED, 0);                 // turn off LED
+            gpio_set_level(LED_PIN_1, 0);                 // turn off LED
             ESP_LOGI("Button", "Button released");  // print message on console
         }
 
