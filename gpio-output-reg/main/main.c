@@ -24,18 +24,17 @@
 //pin mapping
 #define LED1 (1ULL<<1)    //GPIO1
 #define LED2 (1ULL<<2)    //GPIO2
-#define LED3 (1ULL<<3)
 
 //main task
 void app_main(void)
 {
-    REG_WRITE(GPIO_ENABLE_REG, LED1|LED2|LED3); //enable GPIO1, GPIO2 and GPIO3
+    REG_WRITE(GPIO_ENABLE_REG, LED1|LED2); //enable GPIO1 and GPIO2 
     
     while(true)
     {
-        REG_WRITE(GPIO_OUT_W1TS_REG, LED1|LED2|LED3);   //set GPIO1, GPIO2 and GPIO3 to 1
-        vTaskDelay(1000 / portTICK_PERIOD_MS);          //delay 1 secon
-        REG_WRITE(GPIO_OUT_W1TC_REG, LED1|LED2|LED3);   //set GPIO1, GPIO2 and GPIO3 to 0
-        vTaskDelay(1000 / portTICK_PERIOD_MS);          //delay 1 secon
+        REG_WRITE(GPIO_OUT_W1TS_REG, LED1|LED2);   //set GPIO1 and GPIO2
+        vTaskDelay(1000 / portTICK_PERIOD_MS);     //delay 1 secon
+        REG_WRITE(GPIO_OUT_W1TC_REG, LED1|LED2);   //clear GPIO1 and GPIO2
+        vTaskDelay(1000 / portTICK_PERIOD_MS);     //delay 1 secon
     }
 }

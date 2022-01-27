@@ -25,10 +25,10 @@
 #include "esp_log.h"
 
 //pin mapping
-#define LED_PIN1 1      //GPIO1
-#define LED_PIN2 2      //GPIO2
-#define BUTTON_PIN 6    //GPIO6
-#define BUTTON_PIN2 7   //GPIO7
+#define LED_PIN_1 1         //GPIO1
+#define LED_PIN_2 2         //GPIO2
+#define BUTTON_PIN 6        //GPIO6
+#define BUTTON_PIN2 7       //GPIO7
 
 //queue handle
 xQueueHandle gpio_evt_queue = NULL;             //queue to handle gpio events
@@ -36,7 +36,7 @@ xQueueHandle gpio_evt_queue = NULL;             //queue to handle gpio events
 //ISR handler
 static void IRAM_ATTR gpio_isr_handler(void* arg)
 {
-    uint8_t gpio_num = (uint8_t) arg;                       //get the GPIO number
+    uint32_t gpio_num = (uint32_t) arg;                     //get the GPIO number
     xQueueSendFromISR(gpio_evt_queue , &gpio_num, NULL);    //send the GPIO number to the queue
 }
 
@@ -49,7 +49,7 @@ void buttonTask(void *pvpameters)
     while(true) 
     {
         xQueueReceive(gpio_evt_queue , &gpio_num, portMAX_DELAY);       //wait for data in queue
-        ESP_LOGI("TASK BUTTON","Button (GPIO %d) pressed", gpio_num);   //print message
+        ESP_LOGI("buttonTask", "GPIO[%d] intr, val: %d\n", gpio_num, gpio_get_level(gpio_num));   //print message
 
         if (gpio_num == BUTTON_PIN)             //if button 
         {
@@ -69,7 +69,9 @@ void app_main(void)
 
     //gpio_pad_select_gpio(LED);
     //gpio_set_direction(LED, GPIO_MODE_OUTPUT);
-    io_config.pin_bit_mask = (1<<LED_PIN1) | (1<<LED_PIN2); //set GPIO1 and GPIO2 as output
+    //gpio_pad_select_gpio(LED_PIN_2);
+    //gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);
+    io_config.pin_bit_mask = (1<<LED_PIN_1) | (1<<LED_PIN_2); //set GPIO1 and GPIO2 as output
     io_config.mode = GPIO_MODE_OUTPUT;                      //set GPIO1 and GPIO2 as output
     io_config.pull_up_en = GPIO_PULLUP_DISABLE;             //disable pull-up
     io_config.pull_down_en = GPIO_PULLDOWN_DISABLE;         //disable pull-down
@@ -94,7 +96,7 @@ void app_main(void)
     xTaskCreate(buttonTask, "buttonTask", 2048, NULL, 2, NULL);     //create button task
 
     gpio_install_isr_service(ESP_INTR_FLAG_LEVEL1);                         //install gpio isr service
-    gpio_isr_handler_add(BUTTON_PIN, gpio_isr_handler, (void*) BUTTON_PIN;  //add isr handler for button1
+    gpio_isr_handler_add(BUTTON_PIN, gpio_isr_handler, (void*) BUTTON_PIN);  //add isr handler for button1
     gpio_isr_handler_add(BUTTON_PIN2, gpio_isr_handler, (void*) BUTTON_PIN2); //add isr handler for button2
 
 }
