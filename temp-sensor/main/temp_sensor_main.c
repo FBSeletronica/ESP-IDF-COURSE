@@ -40,7 +40,7 @@ void app_main(void)
 
     while (1) {
         float temp_out;                                            //temperature sensor output variable
-        temp_sensor_read_celsius(&tsens_out);                      //read temperature sensor output
+        temp_sensor_read_celsius(&temp_out);                      //read temperature sensor output
         ESP_LOGI(TAG, "Temperature out celsius %f°C", temp_out);   //log message
         vTaskDelay(1000 / portTICK_RATE_MS);                       //delay 1 second
     }
