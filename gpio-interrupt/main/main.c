@@ -26,9 +26,10 @@
 #include "esp_log.h"
 
 //pin mapping
-#define LED 3 //GPIO3
-#define BUTTON 6 //GPIO6
-#define BUTTON2 7 //GPIO7
+#define LED_PIN_1 1     //GPIO1
+#define LED_PIN_2 2     //GPIO2
+#define BUTTON_PIN 6    //GPIO6
+#define BUTTON_PIN2 7   //GPIO7
 
 //queue handle
 xQueueHandle gpio_evt_queue = NULL;                 //queue to handle gpio events
@@ -36,51 +37,61 @@ xQueueHandle gpio_evt_queue = NULL;                 //queue to handle gpio event
 //ISR handler
 static void IRAM_ATTR gpio_isr_handler(void* arg)   
 {
-    uint8_t gpio_num = (uint8_t) arg;                    //get the GPIO number
+    uint32_t gpio_num = (uint32_t) arg;                    //get the GPIO number
     xQueueSendFromISR(gpio_evt_queue , &gpio_num, NULL); //send the GPIO number to the queue
 }
 
 //button task
 void buttonTask(void *pvpameters)
 {
-    uint8_t i=0;      //auxiliar variable
-    uint8_t gpio_num; //variable to store the GPIO number
+    uint32_t gpio_num;                          //variable to store the GPIO number
+    uint8_t led1 = 0, led2 = 0;                 //variables to store the state of the LEDs
 
-    while(true) //infinite loop
+    while (1)
     {
-        xQueueReceive(gpio_evt_queue , &gpio_num, portMAX_DELAY);    //wait for data in queue
-        ESP_LOGI("TASK BUTTON","Button (GPIO %d) pressed", gpio_num); //print message
-        gpio_set_level(LED,i^=1);                                     //toggle LED
+        xQueueReceive(gpio_evt_queue, &gpio_num, portMAX_DELAY);                                //wait for a value on queue
+        ESP_LOGI("buttonTask", "GPIO[%d] intr, val: %d\n", gpio_num, gpio_get_level(gpio_num)); //print message on console
+
+        if (gpio_num == BUTTON_PIN)                     //if BUTTON_PIN 
+        {
+            gpio_set_level(LED_PIN_1, led1 ^= 1);       //toggle LED_PIN_1
+        }
+        else if (gpio_num == BUTTON_PIN2)               //else if BUTTON_PIN2 
+        {
+            gpio_set_level(LED_PIN_2, led2 ^= 1);       //toggle LED_PIN_2
+        }
     }
 }
 
 //main function
 void app_main(void)
 {
-    //initialize LED
-    gpio_pad_select_gpio(LED);                  //select GPIO3
-    gpio_set_direction(LED, GPIO_MODE_OUTPUT);  //set as output
+    //initialize LED_PIN_1 and LED_PIN_2 as output
+    gpio_pad_select_gpio(LED_PIN_1);                    //select LED_PIN_1 as GPIO
+    gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);    //set as output
+    gpio_pad_select_gpio(LED_PIN_2);                    //select LED_PIN_2 as GPIO
+    gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);    //set as output    
 
     //initialize button
-    gpio_pad_select_gpio(BUTTON);                   //select GPIO6
-    gpio_set_direction(BUTTON, GPIO_MODE_INPUT);    //set as input
-    gpio_pullup_en(BUTTON);                         //enable pull-up
-    gpio_pulldown_dis(BUTTON);                      //disable pull-down
-    gpio_set_intr_type(BUTTON, GPIO_INTR_NEGEDGE);  //interrupt on negative edge
+    gpio_pad_select_gpio(BUTTON_PIN);                   //select BUTTON_PIN as GPIO
+    gpio_set_direction(BUTTON_PIN, GPIO_MODE_INPUT);    //set as input
+    gpio_pullup_en(BUTTON_PIN);                         //enable pull-up
+    gpio_pulldown_dis(BUTTON_PIN);                      //disable pull-down
+    gpio_set_intr_type(BUTTON_PIN, GPIO_INTR_NEGEDGE);  //interrupt on negative edge
 
     //initialize button2
-    gpio_pad_select_gpio(BUTTON2);                  //select GPIO7
-    gpio_set_direction(BUTTON2, GPIO_MODE_INPUT);   //set as input
-    gpio_pullup_en(BUTTON2);                        //enable pull-up
-    gpio_pulldown_dis(BUTTON2);                     //disable pull-down
-    gpio_set_intr_type(BUTTON2, GPIO_INTR_NEGEDGE); //interrupt on negative edge
+    gpio_pad_select_gpio(BUTTON_PIN2);                  //select BUTTON_PIN2 as GPIO
+    gpio_set_direction(BUTTON_PIN2, GPIO_MODE_INPUT);   //set as input
+    gpio_pullup_en(BUTTON_PIN2);                        //enable pull-up
+    gpio_pulldown_dis(BUTTON_PIN2);                     //disable pull-down
+    gpio_set_intr_type(BUTTON_PIN2, GPIO_INTR_NEGEDGE); //interrupt on negative edge
 
-    gpio_evt_queue  = xQueueCreate(5, sizeof(uint8_t));         //create queue
+    gpio_evt_queue  = xQueueCreate(5, sizeof(uint32_t));         //create queue
     xTaskCreate(buttonTask, "buttonTask", 2048, NULL, 2, NULL); //create task
 
     
     gpio_install_isr_service(ESP_INTR_FLAG_LEVEL1);                  //install interrupt service routine
-    gpio_isr_handler_add(BUTTON, gpio_isr_handler, (void*) BUTTON);  //add ISR handler for button
-    gpio_isr_handler_add(BUTTON2, gpio_isr_handler, (void*) BUTTON2); //add ISR handler for button2
+    gpio_isr_handler_add(BUTTON_PIN, gpio_isr_handler, (void*) BUTTON_PIN);  //add ISR handler for button
+    gpio_isr_handler_add(BUTTON_PIN2, gpio_isr_handler, (void*) BUTTON_PIN2); //add ISR handler for button2
 
 }
