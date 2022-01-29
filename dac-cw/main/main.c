@@ -26,10 +26,10 @@
 void app_main(void)
 {
     dac_cw_config_t dac_cw_config = {       //configure DAC with a cosine wave
-        .en_ch = DAC_CHANNEL_1,             //enable DAC channel 1 pin 17 on ES32-S2
+        .en_ch = DAC_CHANNEL_1,             //enable DAC channel 1 pin 17 on ES32-S2 or pin 25 on ESP32
         .scale = DAC_CW_SCALE_2,            //scale DAC to 1/2 of the DAC range
         .phase = DAC_CW_PHASE_0,            //Phase shift +0° 
-        .freq = 1100,                       // Range: 130(130Hz) ~ 55000(100KHz).
+        .freq = 1000,                       // Range: 130(130Hz) ~ 55000(100KHz).
         .offset = 48                        // Range: 0 ~ 255.
     };
     
