@@ -26,7 +26,7 @@ int i = 0;
 
 void app_main()
 {
-    dac_output_enable(DAC_CHANNEL_1);       //enable DAC channel 1 pin 17 on ES32-S2
+    dac_output_enable(DAC_CHANNEL_1);       //enable DAC channel 1 (GPIO17 on ES32-S2) (GPIO25 on ES32)
     dac_output_voltage(DAC_CHANNEL_1, 0);   //set DAC channel 1 to 0V
 
     while(1)
