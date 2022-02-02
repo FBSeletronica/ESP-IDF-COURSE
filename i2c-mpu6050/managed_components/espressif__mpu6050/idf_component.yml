@@ -1,0 +1,6 @@
+dependencies:
+  idf:
+    version: '>=4.0'
+description: I2C driver for MPU6050 gyroscope and accelerometer
+url: https://github.com/espressif/esp-bsp/tree/master/components/mpu6050
+version: 1.0.1
