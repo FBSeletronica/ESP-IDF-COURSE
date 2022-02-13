@@ -30,9 +30,6 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 
-//commom component includes
-#include "protocol_examples_common.h"
-
 //http client includes
 #include "esp_http_client.h"
 
