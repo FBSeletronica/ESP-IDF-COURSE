@@ -57,6 +57,7 @@ void mqtt_publisher_task(void *pvParameters)
 //main func
 void app_main(void)
 {
+    vTaskDelay(1000);                   //delay for wait USB CDC initialization
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
