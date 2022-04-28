@@ -95,6 +95,7 @@ void http_client_request()
 //main func
 void app_main(void)
 {
+    vTaskDelay(1000);                                   //delay for wait USB CDC
     //initialize NVS
     ESP_ERROR_CHECK(nvs_flash_init());                  //initialize NVS
     ESP_ERROR_CHECK(esp_netif_init());                  //initialize network interface
