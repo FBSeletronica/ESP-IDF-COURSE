@@ -24,36 +24,45 @@
 #include "esp_log.h"
 
 //pins map
-#define LED_PIN_1 1     //GPIO1
-#define LED_PIN_2 2     //GPIO2
-#define BUTTON_PIN 6    //GPIO6
+#define LED1_PIN 21     //GPIO21
+#define LED2_PIN 33     //GPIO33
+#define BUTTON_PIN 2    //GPIO2
+
+const static char *TAG = "BUTTON TEST: ";   //for Log messages
 
 //main function
 void app_main(void)
 {
+    //local variables
+    bool button_state = 1;  //variable to store button state
+    bool i = 0;             //variable to store LED state
+
     //configure LED_PIN_1 GPIO as input
-    gpio_pad_select_gpio(LED_PIN_1);                    //select LED_PIN_1 as GPIO
-    gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);   //set LED_PIN_1 as output
+    gpio_reset_pin(LED1_PIN);                          //reset pin and set as GPIO
+    gpio_set_direction(LED1_PIN, GPIO_MODE_OUTPUT);   //set LED_PIN_1 as output
 
     //configure button_PIN GPIO as input
-    gpio_pad_select_gpio(BUTTON_PIN);                   //select BUTTON_PIN as GPIO
+    gpio_reset_pin(BUTTON_PIN);                         //reset pin and set as GPIO
     gpio_set_direction(BUTTON_PIN, GPIO_MODE_INPUT);    //set BUTTON_PIN as input
     gpio_set_pull_mode(BUTTON_PIN, GPIO_PULLUP_ONLY);   //set pull-up resistor
 
     while(true) //infinite loop
     {
-       
-        if(gpio_get_level(BUTTON_PIN) == 0)         // if button is pressed
-        {
-            gpio_set_level(LED_PIN_1, 1);           // turn on LED    
-            ESP_LOGI("Button", "Button pressed");   // print message on console
-        }
-        else                                        // if button is not pressed
-        {
-            gpio_set_level(LED_PIN_1, 0);                 // turn off LED
-            ESP_LOGI("Button", "Button released");  // print message on console
-        }
+        int new_state = gpio_get_level(BUTTON_PIN);   //read button state and save in new_state variable
 
+        if (new_state != button_state)              //if button state is different from previous state
+        {
+            button_state = new_state;               //update button state
+            if (button_state == 0)                  //if button is pressed
+            {
+                gpio_set_level(LED1_PIN, i^=1);      //toggle LED state
+                ESP_LOGI(TAG,"Button pressed");   //print message on console
+            }
+            else                                    //if button is not pressed
+            {
+                ESP_LOGI(TAG,"Button released");    //print message on console
+            }
+        }
         vTaskDelay(100 / portTICK_PERIOD_MS);       // delay for 100 ms
     }
 }
