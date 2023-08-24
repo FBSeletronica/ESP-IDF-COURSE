@@ -24,16 +24,16 @@
 #include "driver/gpio.h"
 
 //pin definitions
-#define LED_PIN_1 1
-#define LED_PIN_2 2
+#define LED_PIN_1 21        
+#define LED_PIN_2 33
 
 void app_main(void)
 {
     //configure GPIO1 as output
-    gpio_pad_select_gpio(LED_PIN_1);                    //select LED_PIN_1 as GPIO
+    gpio_reset_pin(LED_PIN_1);                          //reset GPIO to default state
     gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);    //set LED_PIN_1 as output
 
-    gpio_pad_select_gpio(LED_PIN_2);                    //select LED_PIN_2 as GPIO
+    gpio_reset_pin(LED_PIN_2);                         //reset GPIO to default state
     gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);    //set LED_PIN_2 as output
 
     while(1) //infinite loop
