@@ -26,13 +26,16 @@
 #include "esp_log.h"
 
 //pin mapping
-#define LED_PIN_1 1     //GPIO1
-#define LED_PIN_2 2     //GPIO2
-#define BUTTON_PIN 6    //GPIO6
-#define BUTTON_PIN2 7   //GPIO7
+#define LED1_PIN 21          //GPIO21
+#define LED2_PIN 33          //GPIO33
+#define LED3_PIN 14          //GPIO14
+#define BUTTON1_PIN 2        //GPIO2
+#define BUTTON2_PIN 3        //GPIO3
+
+static const char* TAG = "BUTTON_TEST";                 //tag for ESP_LOGx
 
 //queue handle
-xQueueHandle gpio_evt_queue = NULL;                 //queue to handle gpio events
+static QueueHandle_t gpio_evt_queue = NULL;                 //queue to handle gpio events
 
 //ISR handler
 static void IRAM_ATTR gpio_isr_handler(void* arg)   
@@ -44,21 +47,29 @@ static void IRAM_ATTR gpio_isr_handler(void* arg)
 //button task
 void buttonTask(void *pvpameters)
 {
-    uint32_t gpio_num;                          //variable to store the GPIO number
-    uint8_t led1 = 0, led2 = 0;                 //variables to store the state of the LEDs
+    uint32_t gpio_num;                  //gpio number variable
+    uint8_t led1 = 0, led2 = 0;         //led state variables
+    TickType_t last_button_press = 0;   //last button press time variable
 
-    while (1)
+    while (true) 
     {
-        xQueueReceive(gpio_evt_queue, &gpio_num, portMAX_DELAY);                                //wait for a value on queue
-        ESP_LOGI("buttonTask", "GPIO[%d] intr, val: %d\n", gpio_num, gpio_get_level(gpio_num)); //print message on console
+        xQueueReceive(gpio_evt_queue, &gpio_num, portMAX_DELAY);        //wait for gpio event from ISR
+        ESP_LOGI(TAG, "GPIO[%li] intr \n", gpio_num);                   //LOG the GPIO number       
+        
+        TickType_t current_time = xTaskGetTickCount();                  //get current time
 
-        if (gpio_num == BUTTON_PIN)                     //if BUTTON_PIN 
+        if (current_time - last_button_press >= pdMS_TO_TICKS(250))     //check if 250ms has passed since last button press
         {
-            gpio_set_level(LED_PIN_1, led1 ^= 1);       //toggle LED_PIN_1
-        }
-        else if (gpio_num == BUTTON_PIN2)               //else if BUTTON_PIN2 
-        {
-            gpio_set_level(LED_PIN_2, led2 ^= 1);       //toggle LED_PIN_2
+            last_button_press = current_time;                           //update last button press time
+
+            if (gpio_num == BUTTON1_PIN)                                //check if button1 was pressed
+            {
+                gpio_set_level(LED1_PIN, led1 ^= 1);                    //toggle led1
+            }
+            else if (gpio_num == BUTTON2_PIN)                           //check if button2 was pressed
+            {
+                gpio_set_level(LED2_PIN, led2 ^= 1);                    //toggle led2
+            }
         }
     }
 }
@@ -67,31 +78,45 @@ void buttonTask(void *pvpameters)
 void app_main(void)
 {
     //initialize LED_PIN_1 and LED_PIN_2 as output
-    gpio_pad_select_gpio(LED_PIN_1);                    //select LED_PIN_1 as GPIO
-    gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);    //set as output
-    gpio_pad_select_gpio(LED_PIN_2);                    //select LED_PIN_2 as GPIO
-    gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);    //set as output    
+    gpio_reset_pin(LED1_PIN);                          //reset pin and set as GPIO
+    gpio_set_direction(LED1_PIN, GPIO_MODE_OUTPUT);    //set as output
+    gpio_reset_pin(LED2_PIN);                          //reset pin and set as GPIO
+    gpio_set_direction(LED2_PIN, GPIO_MODE_OUTPUT);    //set as output   
+    gpio_reset_pin(LED3_PIN);                          //reset pin and set as GPIO
+    gpio_set_direction(LED3_PIN, GPIO_MODE_OUTPUT);    //set as output 
+
+    //turn off led1, led2 and led3
+    gpio_set_level(LED1_PIN, 0);                            //turn off led1
+    gpio_set_level(LED2_PIN, 0);                            //turn off led2
+    gpio_set_level(LED3_PIN, 0);                            //turn off led3
 
     //initialize button
-    gpio_pad_select_gpio(BUTTON_PIN);                   //select BUTTON_PIN as GPIO
-    gpio_set_direction(BUTTON_PIN, GPIO_MODE_INPUT);    //set as input
-    gpio_pullup_en(BUTTON_PIN);                         //enable pull-up
-    gpio_pulldown_dis(BUTTON_PIN);                      //disable pull-down
-    gpio_set_intr_type(BUTTON_PIN, GPIO_INTR_NEGEDGE);  //interrupt on negative edge
+    gpio_reset_pin(BUTTON1_PIN);                   //select BUTTON_PIN as GPIO
+    gpio_set_direction(BUTTON1_PIN, GPIO_MODE_INPUT);    //set as input
+    gpio_pullup_en(BUTTON1_PIN);                         //enable pull-up
+    gpio_pulldown_dis(BUTTON1_PIN);                      //disable pull-down
+    gpio_set_intr_type(BUTTON1_PIN, GPIO_INTR_NEGEDGE);  //interrupt on negative edge
 
     //initialize button2
-    gpio_pad_select_gpio(BUTTON_PIN2);                  //select BUTTON_PIN2 as GPIO
-    gpio_set_direction(BUTTON_PIN2, GPIO_MODE_INPUT);   //set as input
-    gpio_pullup_en(BUTTON_PIN2);                        //enable pull-up
-    gpio_pulldown_dis(BUTTON_PIN2);                     //disable pull-down
-    gpio_set_intr_type(BUTTON_PIN2, GPIO_INTR_NEGEDGE); //interrupt on negative edge
+    gpio_reset_pin(BUTTON2_PIN);                  //select BUTTON_PIN2 as GPIO
+    gpio_set_direction(BUTTON2_PIN, GPIO_MODE_INPUT);   //set as input
+    gpio_pullup_en(BUTTON2_PIN);                        //enable pull-up
+    gpio_pulldown_dis(BUTTON2_PIN);                     //disable pull-down
+    gpio_set_intr_type(BUTTON2_PIN, GPIO_INTR_NEGEDGE); //interrupt on negative edge
 
-    gpio_evt_queue  = xQueueCreate(5, sizeof(uint32_t));         //create queue
-    xTaskCreate(buttonTask, "buttonTask", 2048, NULL, 2, NULL); //create task
+    gpio_evt_queue  = xQueueCreate(1, sizeof(uint32_t));         //create queue to handle gpio event from ISR
+    xTaskCreate(buttonTask, "buttonTask", 2048, NULL, 2, NULL);  //create button task
 
-    
     gpio_install_isr_service(ESP_INTR_FLAG_LEVEL1);                  //install interrupt service routine
-    gpio_isr_handler_add(BUTTON_PIN, gpio_isr_handler, (void*) BUTTON_PIN);  //add ISR handler for button
-    gpio_isr_handler_add(BUTTON_PIN2, gpio_isr_handler, (void*) BUTTON_PIN2); //add ISR handler for button2
+    gpio_isr_handler_add(BUTTON1_PIN, gpio_isr_handler, (void*) BUTTON1_PIN);  //add ISR handler for button
+    gpio_isr_handler_add(BUTTON2_PIN, gpio_isr_handler, (void*) BUTTON2_PIN); //add ISR handler for button2
+
+    while(true){
+        //toogle led3
+        gpio_set_level(LED3_PIN, 1);                //turn on led3
+        vTaskDelay(pdMS_TO_TICKS(500));             //delay 500ms
+        gpio_set_level(LED3_PIN, 0);                //turn off led3
+        vTaskDelay(pdMS_TO_TICKS(500));             //delay 500ms
+    }
 
 }
