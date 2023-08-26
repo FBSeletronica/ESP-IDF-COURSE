@@ -40,7 +40,7 @@ void app_main(void) // Main
         .channel    = LEDC_CHANNEL_0,           //channel number
         .timer_sel  = LEDC_TIMER_0,             //select timer
         .intr_type  = LEDC_INTR_DISABLE,        //interrupt disabled
-        .gpio_num   = GPIO_NUM_1,               //GPIO number
+        .gpio_num   = GPIO_NUM_21,               //GPIO number
         .duty       = 0,                        //duty cycle
   };
   ledc_channel_config(&channel_conf);         //apply the configuration
