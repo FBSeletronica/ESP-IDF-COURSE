@@ -20,16 +20,17 @@
 #include "freertos/task.h"
 //ESP32 includes
 #include "driver/gpio.h"
+#include "soc/gpio_reg.h"
 
 //pin mapping
-#define LED1 (1ULL<<1)    //GPIO1
-#define LED2 (1ULL<<2)    //GPIO2
+#define LED1 (1ULL<<14)    //GPIO1
+#define LED2 (1ULL<<33)    //GPIO2
 
 //main task
 void app_main(void)
 {
     REG_WRITE(GPIO_ENABLE_REG, LED1|LED2); //enable GPIO1 and GPIO2 
-    
+
     while(true)
     {
         REG_WRITE(GPIO_OUT_W1TS_REG, LED1|LED2);   //set GPIO1 and GPIO2
