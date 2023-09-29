@@ -24,8 +24,8 @@
 #include "driver/gpio.h"
 
 //pin definitions
-#define LED_PIN_1 21        
-#define LED_PIN_2 33
+#define LED_PIN_1 21        //define LED_PIN_1 as GPIO21
+#define LED_PIN_2 33        //define LED_PIN_2 as GPIO33
 
 void app_main(void)
 {
