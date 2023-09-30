@@ -1,7 +1,7 @@
 /******************************************************************************
 * GPIO INPUT
 * This example shows how to configure and use GPIO as input on ESP32
-* This code is part of the course "Aprenda programar o ESP32 com ESP-IDF" by Fábio Souza
+* This code is part of the course "Porgrame o ESP32 com ESP-IDF 5" by Fábio Souza
 * The course is available on https://cursos.embarcados.com.br
 *
 * This example code Creative Commons Attribution 4.0 International License.
