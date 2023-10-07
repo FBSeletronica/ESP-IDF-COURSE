@@ -1,7 +1,7 @@
 /******************************************************************************
 * LED Control - PWM
 * This example shows how to configure and use LEDC peripheral with PWM.
-* This code is part of the course "Aprenda programar o ESP32 com ESP-IDF" by Fábio Souza
+* This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
 * The course is available on https://cursos.embarcados.com.br
 *
 * This example code Creative Commons Attribution 4.0 International License.
@@ -38,16 +38,27 @@ void app_main(void)
     };
     ledc_timer_config(&timer_conf);        //apply the configuration    
 
-    //Prepare and then apply the LEDC PWM channel configuration
+    //Prepare and then apply the LEDC PWM channel0 configuration
     ledc_channel_config_t channel_conf= {   //ledc channel struct
     .channel = LEDC_CHANNEL_0,              //channel number    
     .speed_mode = LEDC_LOW_SPEED_MODE,      //speed mode
     .timer_sel = LEDC_TIMER_0,              //select timer 
     .intr_type = LEDC_INTR_DISABLE,         //interrupt disabled
-    .gpio_num = GPIO_NUM_21,                //GPIO number
+    .gpio_num = GPIO_NUM_14,                //GPIO number
     .duty = 0                              //duty cycle
     };
     ledc_channel_config(&channel_conf);     //apply the configuration
+
+    //Prepare and then apply the LEDC PWM channel1 configuration
+    ledc_channel_config_t channel_config2 = {   //ledc channel struct
+        .channel = LEDC_CHANNEL_1,              //channel number 
+        .speed_mode = LEDC_LOW_SPEED_MODE,      //speed mode
+        .timer_sel = LEDC_TIMER_0,              //select timer
+        .intr_type = LEDC_INTR_DISABLE,         //interrupt disabled
+        .gpio_num = GPIO_NUM_21,                //GPIO number
+        .duty = 511                             //duty cycle
+    };
+    ledc_channel_config(&channel_config2);
 
     //init the duty cycle value
     ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 0);    //set duty cycle value
