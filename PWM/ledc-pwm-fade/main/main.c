@@ -28,7 +28,7 @@ void app_main(void) // Main
 
       .speed_mode      = LEDC_LOW_SPEED_MODE,   //timer mode
       .timer_num       = LEDC_TIMER_0,          //timer number
-      .freq_hz         = 1000,                  //frequency in Hz
+      .freq_hz         = 5000,                  //frequency in Hz
       .duty_resolution = LEDC_TIMER_12_BIT,     //duty resolution
       .clk_cfg         = LEDC_AUTO_CLK          //clock source 
   };
@@ -40,10 +40,21 @@ void app_main(void) // Main
         .channel    = LEDC_CHANNEL_0,           //channel number
         .timer_sel  = LEDC_TIMER_0,             //select timer
         .intr_type  = LEDC_INTR_DISABLE,        //interrupt disabled
-        .gpio_num   = GPIO_NUM_21,               //GPIO number
+        .gpio_num   = GPIO_NUM_14,               //GPIO number
         .duty       = 0,                        //duty cycle
   };
   ledc_channel_config(&channel_conf);         //apply the configuration
+
+   //Prepare and then apply the LEDC PWM channel1 configuration
+    ledc_channel_config_t channel_config2 = {   //ledc channel struct
+        .channel = LEDC_CHANNEL_1,              //channel number 
+        .speed_mode = LEDC_LOW_SPEED_MODE,      //speed mode
+        .timer_sel = LEDC_TIMER_0,              //select timer
+        .intr_type = LEDC_INTR_DISABLE,         //interrupt disabled
+        .gpio_num = GPIO_NUM_21,                //GPIO number
+        .duty = 511                             //duty cycle
+    };
+    ledc_channel_config(&channel_config2);
  
   //iniatilize fade service
   ledc_fade_func_install(0);                 //install the fade function
@@ -51,9 +62,9 @@ void app_main(void) // Main
   while(1)
   {     //fade routine    
         ledc_set_fade_time_and_start(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0,4096, 1000, LEDC_FADE_WAIT_DONE); //set fade time and start fade
-        vTaskDelay(1000 / portTICK_PERIOD_MS);                                                             //delay 1 second
+        vTaskDelay(500 / portTICK_PERIOD_MS);                                                             //delay 1 second
         ledc_set_fade_time_and_start(LEDC_LOW_SPEED_MODE,LEDC_CHANNEL_0,0,1000,LEDC_FADE_WAIT_DONE);       //set fade time and start fade
-        vTaskDelay(1000 / portTICK_PERIOD_MS);                                                             //delay 1 second
+        vTaskDelay(500 / portTICK_PERIOD_MS);                                                             //delay 1 second
   }
 
 }
