@@ -53,7 +53,7 @@ void app_main(void)
     {
         ESP_ERROR_CHECK(adc_oneshot_read(adc1_handle, ADC_CHANNEL_0, &adc_raw));                        //ADC1 Read
         ESP_LOGI(TAG, "ADC%d Channel[%d] Raw Data: %d ", ADC_UNIT_1 + 1, ADC_CHANNEL_0, adc_raw);       //Print ADC1 Raw Data
-        voltage = (adc_raw * 1100)/8192;                                                                //Calculate Voltage
+        voltage = (adc_raw * 2500)/8192;                                                                //Calculate Voltage
         ESP_LOGI(TAG, "ADC%d Channel[%d] Voltage: %d mV", ADC_UNIT_1 + 1, ADC_CHANNEL_0, voltage);      //Print Voltage
         vTaskDelay(pdMS_TO_TICKS(1000));                                                                //Delay 1s
     }

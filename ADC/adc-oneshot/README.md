@@ -1,4 +1,4 @@
-## bADC oneshot - (uncalibrated)
+## ADC oneshot - (uncalibrated)
 
 This example shows how to configure and use ADC peripheral. 
 This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
