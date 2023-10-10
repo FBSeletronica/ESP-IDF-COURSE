@@ -1,7 +1,7 @@
 /******************************************************************************
-* ADC
-* This example shows how to configure and use ADC peripheral.
-* This code is part of the course "Aprenda programar o ESP32 com ESP-IDF" by Fábio Souza
+* ADC oneshot calibrated
+* This example shows how to calibrate and use ADC 
+* This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
 * The course is available on https://cursos.embarcados.com.br
 *
 * This example code Creative Commons Attribution 4.0 International License.
@@ -16,59 +16,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+//freertos includes
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "soc/soc_caps.h"
-#include "esp_log.h"
+
+//adc driver includes
 #include "esp_adc/adc_oneshot.h"
 #include "esp_adc/adc_cali.h"
 #include "esp_adc/adc_cali_scheme.h"
 
-const static char *TAG = "EXAMPLE";
+#include "esp_log.h"
+const static char *TAG = "ADC Test";
 
-static int adc_raw[2][10];
-static int voltage[2][10];
-static bool example_adc_calibration_init(adc_unit_t unit, adc_channel_t channel, adc_atten_t atten, adc_cali_handle_t *out_handle);
-static void example_adc_calibration_deinit(adc_cali_handle_t handle);
+static int adc_raw;     // ADC raw data
+static int voltage;     // ADC voltage
+static bool example_adc_calibration_init(adc_unit_t unit, adc_channel_t channel, adc_atten_t atten, adc_cali_handle_t *out_handle); // ADC calibration init
+static void example_adc_calibration_deinit(adc_cali_handle_t handle);                                                               // ADC calibration deinit
 
 void app_main(void)
 {
     //-------------ADC1 Init---------------//
-    adc_oneshot_unit_handle_t adc1_handle;
-    adc_oneshot_unit_init_cfg_t init_config1 = {
-        .unit_id = ADC_UNIT_1,
+    adc_oneshot_unit_handle_t adc1_handle;                                  // ADC1 handle
+    adc_oneshot_unit_init_cfg_t init_config1 = {                            // ADC1 init config
+        .unit_id = ADC_UNIT_1,                                              // ADC1
     };
-    ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config1, &adc1_handle));
+    ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config1, &adc1_handle));     //ADC1 Init
 
     //-------------ADC1 Config---------------//
-    adc_oneshot_chan_cfg_t config = {
-        .bitwidth = ADC_BITWIDTH_DEFAULT,
-        .atten = ADC_ATTEN_DB_11,
+    adc_oneshot_chan_cfg_t config = {                                                   // ADC1 config
+        .bitwidth = ADC_BITWIDTH_DEFAULT,                                               // ADC1 bitwidth (default)
+        .atten = ADC_ATTEN_DB_11,                                                       // ADC1 attenuation)
     };
-    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc1_handle, ADC_CHANNEL_0, &config));
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc1_handle, ADC_CHANNEL_0, &config));   // ADC1 Config
 
     //-------------ADC1 Calibration Init---------------//
-    adc_cali_handle_t adc1_cali_chan0_handle = NULL;
-    bool do_calibration1_chan0 = example_adc_calibration_init(ADC_UNIT_1, ADC_CHANNEL_0, ADC_ATTEN_DB_11, &adc1_cali_chan0_handle);
+    adc_cali_handle_t adc1_cali_chan0_handle = NULL;    // ADC1 Calibration handle
+    bool do_calibration1_chan0 = example_adc_calibration_init(ADC_UNIT_1, ADC_CHANNEL_0, ADC_ATTEN_DB_11, &adc1_cali_chan0_handle); // ADC1 Calibration Init
 
     while (1)
     {
-        ESP_ERROR_CHECK(adc_oneshot_read(adc1_handle, ADC_CHANNEL_0, &adc_raw[0][0]));
-        ESP_LOGI(TAG, "ADC%d Channel[%d] Raw Data: %d", ADC_UNIT_1 + 1, ADC_CHANNEL_0, adc_raw[0][0]);
-        if (do_calibration1_chan0)
+        ESP_ERROR_CHECK(adc_oneshot_read(adc1_handle, ADC_CHANNEL_0, &adc_raw));                            // ADC1 Read
+        ESP_LOGI(TAG, "ADC%d Channel[%d] Raw Data: %d", ADC_UNIT_1 + 1, ADC_CHANNEL_0, adc_raw);            // ADC1 Log
+        if (do_calibration1_chan0) // ADC1 Calibration             
         {
-            ESP_ERROR_CHECK(adc_cali_raw_to_voltage(adc1_cali_chan0_handle, adc_raw[0][0], &voltage[0][0]));
-            ESP_LOGI(TAG, "ADC%d Channel[%d] Cali Voltage: %d mV", ADC_UNIT_1 + 1, ADC_CHANNEL_0, voltage[0][0]);
+            ESP_ERROR_CHECK(adc_cali_raw_to_voltage(adc1_cali_chan0_handle, adc_raw, &voltage));            // ADC1 Calibration
+            ESP_LOGI(TAG, "ADC%d Channel[%d] Cali Voltage: %d mV", ADC_UNIT_1 + 1, ADC_CHANNEL_0, voltage); // ADC1 Calibration Log
         }
 
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(1000));    // Delay
     }
 
     // Tear Down
-    ESP_ERROR_CHECK(adc_oneshot_del_unit(adc1_handle));
-    if (do_calibration1_chan0)
+    ESP_ERROR_CHECK(adc_oneshot_del_unit(adc1_handle));             // ADC1 Deinit
+    if (do_calibration1_chan0)                                      // ADC1 Calibration Deinit
     {
-        example_adc_calibration_deinit(adc1_cali_chan0_handle);
+        example_adc_calibration_deinit(adc1_cali_chan0_handle);     // ADC1 Calibration Deinit
     }
 }
 
