@@ -1,6 +1,6 @@
-## Task High Water Mark
+## Create Task Pinned To Core
 
-This example shows how to use the task high water mark to check the stack
+This example shows how to create tasks pinned to a specific core.
 This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
 The course is available on https://cursos.embarcados.com.br
 
