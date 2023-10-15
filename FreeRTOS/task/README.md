@@ -1,5 +1,5 @@
-##Creating Task
-* 
+## Creating Task
+
 This example shows how to create a task in ESP32 using ESP-IDF
 This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
 The course is available on https://cursos.embarcados.com.br
