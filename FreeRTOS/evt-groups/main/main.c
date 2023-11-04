@@ -38,7 +38,6 @@ TimerHandle_t xTimer1,xTimer2; /*handle dos timers*/
 /* create event group */
 EventGroupHandle_t xEvents;
 
-
 //tasks prototypes
 void vTask1( void * pvParameters );
 void vTask2( void * pvParameters );
@@ -46,6 +45,8 @@ void vTask3( void * pvParameters );
 
 //callback timer prototypes
 void timer1_callback(TimerHandle_t pxTimer );
+
+static const char *TAG = "EVT_GROUPS_TEST: ";
 
 
 void app_main(void)
@@ -73,6 +74,7 @@ void app_main(void)
 
     xTaskCreate(vTask1,  "Task1",  configMINIMAL_STACK_SIZE + 1024,  NULL, 1, &xTask1);    
     xTaskCreate(vTask2,  "Task2",  configMINIMAL_STACK_SIZE + 1024,  NULL, 1, &xTask2);    
+    xTaskCreate(vTask3,  "Task3",  configMINIMAL_STACK_SIZE + 1024,  NULL, 1, NULL);
 
     xTimerStart(xTimer1, 0); //start timer1
 
@@ -85,8 +87,8 @@ void vTask1( void * parameter )
 
     while(1)
     {
-        EventBits_t xbit = xEventGroupWaitBits(xEvents, TASK_1_BIT, pdTRUE, pdTRUE, portMAX_DELAY); /* wait forever until event bit of task 1 is set */
-        ESP_LOGI("TASK1","Task 1 saiu do estado de bloqueio");                                       /* log message */
+        xEventGroupWaitBits(xEvents, TASK_1_BIT, pdTRUE, pdTRUE, portMAX_DELAY); /* wait forever until event bit of task 1 is set */
+        ESP_LOGI(TAG,"Task 1 saiu do estado de bloqueio");                                       /* log message */
 
     } 
 }
@@ -94,19 +96,28 @@ void vTask1( void * parameter )
 /* this task is similar to sendTask1 */
 void vTask2( void * parameter )
 {
-    int led = 0;
+  int led = 0;
   while(1)
   {
     /* wait forever until event bit of task 2 is set */
-    EventBits_t xbit = xEventGroupWaitBits(xEvents, TASK_2_BIT, pdTRUE, pdTRUE, portMAX_DELAY);
-    ESP_LOGI("TASK1","Task 2 saiu do estado de bloqueio");
+    xEventGroupWaitBits(xEvents, TASK_2_BIT, pdTRUE, pdTRUE, portMAX_DELAY);
+    ESP_LOGI(TAG,"Task 2 saiu do estado de bloqueio");
     //toggle LED2
     gpio_set_level(LED2_PIN,led^=1);
   }
 }
 
+void vTask3( void * pvParameters )
+{
+  while(1){
+    xEventGroupWaitBits(xEvents, TASK_1_BIT|TASK_2_BIT, pdTRUE, pdTRUE, portMAX_DELAY);
+    ESP_LOGI(TAG,"Task 3 saiu do estado de bloqueio");
+  }
+}
+
+
 //callback do timer
-void callBackTimer1(TimerHandle_t pxTimer )
+void timer1_callback(TimerHandle_t pxTimer )
 {
   static int count = 0;                   
 
