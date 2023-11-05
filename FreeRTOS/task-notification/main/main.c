@@ -26,7 +26,7 @@
 #define LED2_PIN 14          //GPIO33
 #define BUTTON1_PIN 2        //GPIO2
 
-static const char *TAG = "Task Notifications example";
+static const char *TAG = "Task Notifications example";  // Tag for logging
 
 //Task handles
 TaskHandle_t xTask1Handle = NULL;
@@ -36,12 +36,11 @@ void vTask1(void *pvParameters);
 
 static void IRAM_ATTR gpio_isr_handler(void* arg)
 {
-    BaseType_t xHigherPriorityTaskWoken = pdTRUE;
+    BaseType_t xHigherPriorityTaskWoken = pdTRUE;   //Variable to check if the task's notification will unblock a task of higher priority
 
-    if(BUTTON1_PIN == (uint32_t) arg)
+    if(BUTTON1_PIN == (uint32_t) arg)            //Check if the interrupt is for button1
     {
-        //Notify task
-        xTaskNotifyFromISR(xTask1Handle, 1, eSetValueWithOverwrite, &xHigherPriorityTaskWoken);
+        xTaskNotifyFromISR(xTask1Handle, 1, eSetValueWithOverwrite, &xHigherPriorityTaskWoken); //Notify task1
     }
 }
 
@@ -69,27 +68,27 @@ void app_main(void)
     gpio_install_isr_service(ESP_INTR_FLAG_LEVEL1);                         //install gpio isr service
     gpio_isr_handler_add(BUTTON1_PIN, gpio_isr_handler, (void*) BUTTON1_PIN);  //add isr handler for button1
 
-    xTaskCreate( vTask1, "Task1", configMINIMAL_STACK_SIZE + 1024, NULL, 2, &xTask1Handle );
+    xTaskCreate( vTask1, "Task1", configMINIMAL_STACK_SIZE + 1024, NULL, 2, &xTask1Handle );    //Create task
 
-    vTaskDelete(NULL);
+    vTaskDelete(NULL);  //Delete task
 }
 
 
 void vTask1(void *pvParameters)
 {
-    uint32_t ulNotifiedValue;
+    uint32_t ulNotifiedValue;           //Holds the value of the notified value
 
     while(1)
     {
         //Wait for notification
-        ulNotifiedValue = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        ulNotifiedValue = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);  //Wait for notification
 
-        if(ulNotifiedValue == 1)
+        if(ulNotifiedValue == 1)                    //Check if notification was received
         {
-            ESP_LOGI(TAG, "Button pressed");
-            gpio_set_level(LED1_PIN, 1);
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
-            gpio_set_level(LED1_PIN, 0);
+            ESP_LOGI(TAG, "Button pressed");        //Log button pressed
+            gpio_set_level(LED1_PIN, 1);            //Turn on LED
+            vTaskDelay(5000 / portTICK_PERIOD_MS);  //Wait 5 seconds
+            gpio_set_level(LED1_PIN, 0);            //Turn off LED
         }
     }
 }
