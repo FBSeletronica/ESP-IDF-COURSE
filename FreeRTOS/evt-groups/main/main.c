@@ -32,7 +32,7 @@
 #define TASK_1_BIT        ( 1 << 0 ) //1
 #define TASK_2_BIT        ( 1 << 1 ) //10
 
-TaskHandle_t xTask1,xTask2;    /*hadle das tasks*/
+TaskHandle_t xTask1,xTask2,xTask3;    /*hadle das tasks*/
 TimerHandle_t xTimer1,xTimer2; /*handle dos timers*/
 
 /* create event group */
@@ -74,7 +74,7 @@ void app_main(void)
 
     xTaskCreate(vTask1,  "Task1",  configMINIMAL_STACK_SIZE + 1024,  NULL, 1, &xTask1);    
     xTaskCreate(vTask2,  "Task2",  configMINIMAL_STACK_SIZE + 1024,  NULL, 1, &xTask2);    
-    xTaskCreate(vTask3,  "Task3",  configMINIMAL_STACK_SIZE + 1024,  NULL, 1, NULL);
+    xTaskCreate(vTask3,  "Task3",  configMINIMAL_STACK_SIZE + 1024,  NULL, 1, &xTask3);
 
     xTimerStart(xTimer1, 0); //start timer1
 
