@@ -36,7 +36,8 @@ void app_main(void)
       .data_bits = UART_DATA_8_BITS,                // Data bits
       .parity = UART_PARITY_DISABLE,                // Disable parity
       .stop_bits = UART_STOP_BITS_1,                // Number of stop bits
-      .flow_ctrl = UART_HW_FLOWCTRL_DISABLE         // Disable flow control
+      .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,        // Disable flow control
+      .source_clk = UART_SCLK_DEFAULT,              // Default clock
     };
   uart_param_config(UART_NUM_0, &uart_config);                        // Configure UART0 parameters
   uart_driver_install(UART_NUM_0, RX_BUF_SIZE, 0, 0, NULL, 0);        // Install UART driver for interrupt-driven reads and writes  
