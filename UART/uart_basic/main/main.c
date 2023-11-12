@@ -64,16 +64,16 @@ void app_main(void)
     vTaskDelay(pdMS_TO_TICKS(1000));                            // Delay 1 second
   }
   
-
-  char incoming_message[RX_BUF_SIZE];                    // Buffer to store incoming messages
+  uint8_t *data = (uint8_t *) malloc(RX_BUF_SIZE);         // Allocate memory to store the data received
   
   while (1)
   {
-    memset(incoming_message, 0, sizeof(incoming_message));  // Clear the buffer
-    if(uart_read_bytes(UART_NUM_0, (uint8_t *)incoming_message, RX_BUF_SIZE, pdMS_TO_TICKS(500)))   // Wait for a message
+    int len = uart_read_bytes(UART_NUM_0, data, RX_BUF_SIZE, pdMS_TO_TICKS(20));  // Read data from UART0
+    if(len)   
     {
-        ESP_LOGI(TAG, "received: %s", incoming_message);   // Print the message to the console
-        uart_write_bytes(UART_NUM_1, incoming_message, sizeof(incoming_message)); // Send the message to UART1
+      data[len] = 0;                                    // Add the null character to the end of the string
+      ESP_LOGI(TAG, "received: %s", data);              // Print the message to the console
+      uart_write_bytes(UART_NUM_1, data, sizeof(data)); // Send the message to UART1
     }
   }
 }
