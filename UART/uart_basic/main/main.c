@@ -13,10 +13,11 @@
 * This code is for teaching purposes only.
 * No warranty of any kind is provided.
 *******************************************************************************/
-#include "esp_log.h"
+#include <stdio.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "driver/uart.h"
 #include "string.h"
-
 #include "esp_log.h"
 
 static const char *TAG = "UART Basic";
@@ -54,9 +55,15 @@ void app_main(void)
 
 
   // Send data to UART0  
-  char message[] = "Hello From ESP32-S2\r\n";               // Message to send
-  printf("sending: %s\n", message);                         // Print the message to the console
-  uart_write_bytes(UART_NUM_0, message, sizeof(message));   // Send the message to UART0
+  char message[] = "Hello From ESP32-S2\r\n";                // Message to send
+
+  for(int i = 0; i < 5; i++)                                  // Loop to send the message
+  {
+    ESP_LOGI(TAG, "sending: %s", message);                    // Print the message to the console
+    uart_write_bytes(UART_NUM_0, message, sizeof(message));   // Send the message to UART0
+    vTaskDelay(pdMS_TO_TICKS(1000));                            // Delay 1 second
+  }
+  
 
   char incoming_message[RX_BUF_SIZE];                    // Buffer to store incoming messages
   
