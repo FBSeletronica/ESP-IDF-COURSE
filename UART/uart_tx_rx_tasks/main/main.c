@@ -24,8 +24,6 @@
 
 static const int RX_BUF_SIZE = 512;        // UART buffer size
 
-void tx_task(void *arg);
-
 int sendData(const char* logName, const char* data);
 void tx_task(void *pvParameters);
 void rx_task(void *pvParameters);
@@ -41,9 +39,9 @@ void app_main(void)
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,      // without flow control
         .source_clk = UART_SCLK_DEFAULT,            // use default clock source
     };
-    
+    uart_param_config(UART_NUM_0, &uart_config); 
     uart_driver_install(UART_NUM_0, RX_BUF_SIZE * 2, 0, 0, NULL, 0);    // install UART driver
-    uart_param_config(UART_NUM_0, &uart_config);                        // configure UART parameters
+                           // configure UART parameters
 
     // Create tasks
     xTaskCreate(rx_task, "uart_rx_task", configMINIMAL_STACK_SIZE + 1024*2, NULL, 2, NULL);
