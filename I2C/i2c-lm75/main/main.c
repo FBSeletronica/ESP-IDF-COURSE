@@ -19,7 +19,7 @@
 #include "driver/i2c.h"
 #include "esp_log.h"
 
-static const char *tag = "LM75A";
+static const char *tag = "LM75";
 
 //define for i2c 
 #define I2C_MASTER_SCL_IO           9           //gpio number for i2c clock - SCL      
@@ -29,9 +29,9 @@ static const char *tag = "LM75A";
 #define I2C_MASTER_TX_BUF_DISABLE   0           //i2c master TX do not need buffer                 
 #define I2C_MASTER_RX_BUF_DISABLE   0           //i2c master RX do not need buffer                
 
-//define for LM75A
-#define LM75A_ADDRESS  0X48                     //LM75A address
-#define LM75_REG_TEMP  0x00                     //LM75A temperature register
+//define for LM75
+#define LM75_ADDRESS  0X48                     //LM75 address
+#define LM75_REG_TEMP  0x00                     //LM75 temperature register
 
 void app_main()
 {
@@ -56,7 +56,7 @@ void app_main()
         uint8_t raw_temp[2];                                                         //array for temperature raw data
         i2c_cmd_handle_t cmd = i2c_cmd_link_create();                                //create i2c command link
         i2c_master_start(cmd);                                                       //start i2c communication
-        i2c_master_write_byte(cmd, (LM75A_ADDRESS << 1) | I2C_MASTER_READ, true);    //send address of LM75A with read bit
+        i2c_master_write_byte(cmd, (LM75_ADDRESS << 1) | I2C_MASTER_READ, true);    //send address of LM75A with read bit
         i2c_master_read(cmd, (uint8_t *)&raw_temp, 2, I2C_MASTER_ACK);               //read 2 bytes from LM75A
         i2c_master_stop(cmd);                                                        //stop i2c communication
         i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);        //execute i2c command
@@ -72,12 +72,12 @@ void app_main()
         }
 
         //calculate temperature
-        int16_t data = (raw_temp[0] << 8 | raw_temp[1]) >> 5;   //combine 2 bytes and shift 5 bits to the right
-        float temperature = (data * 0.125);                     //calculate temperature in celsius 
+        int8_t data = (raw_temp[0]<<1)|(raw_temp[1]>>7);            //combine 2 bytes of data into 1 byte 
+        float temperature = (data*0.5);                             //calculate temperature in celsius 
 
         if(isNeg) temperature *= (-1);                           //if temperature is negative, multiply by -1
 
-        ESP_LOGI(tag, "Temperature: %.2f", temperature);    //logging
+        ESP_LOGI(tag, "Temperature: %.1f", temperature);    //logging
         vTaskDelay(1000 / portTICK_PERIOD_MS);              //delay 1 second
     }
 }
