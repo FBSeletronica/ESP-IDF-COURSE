@@ -1,7 +1,7 @@
 /******************************************************************************
 * WIFI EXAMPLE
-* This example shows how to connect to a WiFi network make a http request
-* This code is part of the course "Aprenda programar o ESP32 com ESP-IDF" by Fábio Souza
+* This example shows how to connect to a WiFi network make a http request using protocol_examples_common.h
+* This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
 * The course is available on https://cursos.embarcados.com.br
 *
 * This example code Creative Commons Attribution 4.0 International License.
@@ -69,6 +69,12 @@ esp_err_t _http_event_handle(esp_http_client_event_t *evt)
         case HTTP_EVENT_DISCONNECTED:
             ESP_LOGI(TAG, "HTTP_EVENT_DISCONNECTED");
             break;
+         case HTTP_EVENT_REDIRECT:
+            ESP_LOGD(TAG, "HTTP_EVENT_REDIRECT");
+            esp_http_client_set_header(evt->client, "From", "user@example.com");
+            esp_http_client_set_header(evt->client, "Accept", "text/html");
+            esp_http_client_set_redirection(evt->client);
+            break;
     }
     return ESP_OK;
 }
@@ -84,9 +90,7 @@ void http_client_request()
     esp_err_t err = esp_http_client_perform(client);
 
     if (err == ESP_OK) {
-    ESP_LOGI(TAG, "Status = %d, content_length = %d",
-            esp_http_client_get_status_code(client),
-            esp_http_client_get_content_length(client));
+    ESP_LOGI(TAG, "Status = %i, content_length = %lli", esp_http_client_get_status_code(client), esp_http_client_get_content_length(client));
     }
     esp_http_client_cleanup(client);
 }
