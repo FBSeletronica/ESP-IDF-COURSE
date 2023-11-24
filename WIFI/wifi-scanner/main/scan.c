@@ -72,12 +72,13 @@ static void wifi_scan(void)
     memset(ap_info, 0, sizeof(ap_info));                            // Clear array
 
     wifi_scan_config_t wifi_scan_config = {                         // Set scan method
-
+        .show_hidden = true,
+        .channel = 11,
     };                                                          
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));               // Set Wi-Fi mode to station
     ESP_ERROR_CHECK(esp_wifi_start());                               // Start Wi-Fi
-    esp_wifi_scan_start(&wifi_scan_config, true);                    // Start Wi-Fi scan
+    ESP_ERROR_CHECK(esp_wifi_scan_start(&wifi_scan_config, true));                    // Start Wi-Fi scan
     ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info)); // Get number of APs found in scan
     ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));               // Get APs found in scan
     ESP_LOGI(TAG, "Total APs scanned = %u", ap_count);                  // Print number of APs found in scan
