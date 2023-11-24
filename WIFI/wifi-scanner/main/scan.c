@@ -15,8 +15,7 @@
 *******************************************************************************/
 #include <string.h>
 #include "freertos/FreeRTOS.h"
-#include "freertos/task.h"	
-#include "freertos/event_groups.h"
+#include "freertos/task.h"
 #include "esp_wifi.h"
 #include "esp_log.h"
 #include "esp_event.h"
@@ -26,112 +25,34 @@
 
 static const char *TAG = "WiFi Scan";
 
-static void print_auth_mode(int authmode)
+char *getAuthModeName(wifi_auth_mode_t wifi_auth_mode)
 {
-    switch (authmode) {
+    switch (wifi_auth_mode)
+    {
     case WIFI_AUTH_OPEN:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_OPEN");
-        break;
-    case WIFI_AUTH_OWE:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_OWE");
-        break;
+        return "WIFI_AUTH_OPEN";
     case WIFI_AUTH_WEP:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_WEP");
-        break;
+        return "WIFI_AUTH_WEP";
     case WIFI_AUTH_WPA_PSK:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_WPA_PSK");
-        break;
+        return "WIFI_AUTH_WPA_PSK";
     case WIFI_AUTH_WPA2_PSK:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_WPA2_PSK");
-        break;
+        return "WIFI_AUTH_WPA2_PSK";
     case WIFI_AUTH_WPA_WPA2_PSK:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_WPA_WPA2_PSK");
-        break;
+        return "WIFI_AUTH_WPA_WPA2_PSK";
     case WIFI_AUTH_WPA2_ENTERPRISE:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_WPA2_ENTERPRISE");
-        break;
+        return "WIFI_AUTH_WPA2_ENTERPRISE";
     case WIFI_AUTH_WPA3_PSK:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_WPA3_PSK");
-        break;
+        return "WIFI_AUTH_WPA3_PSK";
     case WIFI_AUTH_WPA2_WPA3_PSK:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_WPA2_WPA3_PSK");
-        break;
-    default:
-        ESP_LOGI(TAG, "Authmode \tWIFI_AUTH_UNKNOWN");
-        break;
+        return "WIFI_AUTH_WPA2_WPA3_PSK";
+    case WIFI_AUTH_WAPI_PSK:
+        return "WIFI_AUTH_WAPI_PSK";
+    case WIFI_AUTH_OWE:
+        return "WIFI_AUTH_OWE";
+    case WIFI_AUTH_MAX:
+        return "WIFI_AUTH_MAX";
     }
-}
-
-static void print_cipher_type(int pairwise_cipher, int group_cipher)
-{
-    switch (pairwise_cipher) {
-    case WIFI_CIPHER_TYPE_NONE:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_NONE");
-        break;
-    case WIFI_CIPHER_TYPE_WEP40:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_WEP40");
-        break;
-    case WIFI_CIPHER_TYPE_WEP104:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_WEP104");
-        break;
-    case WIFI_CIPHER_TYPE_TKIP:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_TKIP");
-        break;
-    case WIFI_CIPHER_TYPE_CCMP:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_CCMP");
-        break;
-    case WIFI_CIPHER_TYPE_TKIP_CCMP:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_TKIP_CCMP");
-        break;
-    case WIFI_CIPHER_TYPE_AES_CMAC128:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_AES_CMAC128");
-        break;
-    case WIFI_CIPHER_TYPE_SMS4:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_SMS4");
-        break;
-    case WIFI_CIPHER_TYPE_GCMP:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_GCMP");
-        break;
-    case WIFI_CIPHER_TYPE_GCMP256:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_GCMP256");
-        break;
-    default:
-        ESP_LOGI(TAG, "Pairwise Cipher \tWIFI_CIPHER_TYPE_UNKNOWN");
-        break;
-    }
-
-    switch (group_cipher) {
-    case WIFI_CIPHER_TYPE_NONE:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_NONE");
-        break;
-    case WIFI_CIPHER_TYPE_WEP40:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_WEP40");
-        break;
-    case WIFI_CIPHER_TYPE_WEP104:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_WEP104");
-        break;
-    case WIFI_CIPHER_TYPE_TKIP:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_TKIP");
-        break;
-    case WIFI_CIPHER_TYPE_CCMP:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_CCMP");
-        break;
-    case WIFI_CIPHER_TYPE_TKIP_CCMP:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_TKIP_CCMP");
-        break;
-    case WIFI_CIPHER_TYPE_SMS4:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_SMS4");
-        break;
-    case WIFI_CIPHER_TYPE_GCMP:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_GCMP");
-        break;
-    case WIFI_CIPHER_TYPE_GCMP256:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_GCMP256");
-        break;
-    default:
-        ESP_LOGI(TAG, "Group Cipher \tWIFI_CIPHER_TYPE_UNKNOWN");
-        break;
-    }
+    return "NOT FOUND";
 }
 
 /* Initialize Wi-Fi as sta and set scan method */
@@ -150,24 +71,30 @@ static void wifi_scan(void)
     uint16_t ap_count = 0;                                          // Number of APs found in scan
     memset(ap_info, 0, sizeof(ap_info));                            // Clear array
 
+    wifi_scan_config_t wifi_scan_config = {                         // Set scan method
+
+    };                                                          
+
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));               // Set Wi-Fi mode to station
     ESP_ERROR_CHECK(esp_wifi_start());                               // Start Wi-Fi
-    esp_wifi_scan_start(NULL, true);                                 // Start Wi-Fi scan
+    esp_wifi_scan_start(&wifi_scan_config, true);                    // Start Wi-Fi scan
     ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info)); // Get number of APs found in scan
     ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));               // Get APs found in scan
     ESP_LOGI(TAG, "Total APs scanned = %u", ap_count);                  // Print number of APs found in scan
 
     // Print APs found in scan
-    for (int i = 0; (i < DEFAULT_SCAN_LIST_SIZE) && (i < ap_count); i++) {      
-        ESP_LOGI(TAG, "SSID \t\t%s", ap_info[i].ssid);                              // Print SSID
-        ESP_LOGI(TAG, "RSSI \t\t%d", ap_info[i].rssi);                              // Print RSSI
-        print_auth_mode(ap_info[i].authmode);                                       // Print authentication mode
-        if (ap_info[i].authmode != WIFI_AUTH_WEP) {                                 // If authentication mode is not WEP    
-            print_cipher_type(ap_info[i].pairwise_cipher, ap_info[i].group_cipher); // Print cipher type
-        }
-        ESP_LOGI(TAG, "Channel \t\t%d\n", ap_info[i].primary);                      // Print primary channel
+    for (int i = 0; (i < DEFAULT_SCAN_LIST_SIZE) && (i < ap_count); i++) {          // Loop through APs found in scan
+        ESP_LOGI(TAG, "SSID \t%s", ap_info[i].ssid);                              // Print SSID
+        ESP_LOGI(TAG, "RSSI \t%d", ap_info[i].rssi);                              // Print RSSI
+        ESP_LOGI(TAG, "Authmode \t%s", getAuthModeName(ap_info[i].authmode));       // Print authentication mode
+        ESP_LOGI(TAG, "Channel \t%d\n", ap_info[i].primary);                      // Print primary channel
     }
 
+    //close the connection
+    ESP_ERROR_CHECK(esp_wifi_stop());                   // Stop Wi-Fi
+    ESP_ERROR_CHECK(esp_wifi_deinit());                 // Deinit Wi-Fi    
+    ESP_ERROR_CHECK(esp_event_loop_delete_default());   // Delete default event loop
+    esp_netif_destroy(sta_netif);                       // Destroy default Wi-Fi station netif instance            
 }
 
 void app_main(void)
