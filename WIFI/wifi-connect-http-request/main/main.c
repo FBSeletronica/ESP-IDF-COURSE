@@ -1,5 +1,5 @@
 /******************************************************************************
-* WIFI EXAMPLE - Connect Manual
+* WIFI Connect with HTTP Client request
 * This example shows how to connect to a WiFi network make a http request
 * This code is part of the course "Aprenda programar o ESP32 com ESP-IDF" by Fábio Souza
 * The course is available on https://cursos.embarcados.com.br
@@ -31,16 +31,17 @@
 #include "nvs_flash.h"
 
 //http client includes
-#include "esp_http_client.h"
+#include "esp_http_client.h"  //ESp http client library
 
-#include "http_client.h"
-#include "wifi.h"
+#include "http_client.h"      //http client 
+#include "wifi.h"             //wifi 
 
 //tag for logging
 static const char *TAG = "WIFI Example";
 
-xSemaphoreHandle wifi_semaphore;
+SemaphoreHandle_t wifi_semaphore;       //semaphore for wifi connection
 
+//http client task
 void http_client_task(void *pvParameters)
 {
 
@@ -48,27 +49,25 @@ void http_client_task(void *pvParameters)
 
   while(1)
   {
-    ESP_LOGI(TAG, "http_client_task");
+    ESP_LOGI(TAG, "http_client_task");                  //log http client task
     http_client_request();                              //make http request
-    vTaskDelay(pdMS_TO_TICKS(10000));
+    vTaskDelay(pdMS_TO_TICKS(10000));                   //delay 10 seconds
   }
 }
 
 //main func
 void app_main(void)
 {
-    vTaskDelay(1000);                   //delay for wait USB CDC initialization
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-      ESP_ERROR_CHECK(nvs_flash_erase());
-      ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {   //if nvs flash is not initialized
+      ESP_ERROR_CHECK(nvs_flash_erase());                                             //erase nvs flash
+      ret = nvs_flash_init();                                                         //initialize nvs flash
     }
-    ESP_ERROR_CHECK(ret);
+    ESP_ERROR_CHECK(ret);                                                             //check error
 
-    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
-    wifi_semaphore = xSemaphoreCreateBinary();
-    wifi_init_sta();    
-    xTaskCreate(&http_client_task, "http_client_task", 4096, NULL, 5, NULL);
-
+    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");                                       //log wifi mode
+    wifi_semaphore = xSemaphoreCreateBinary();                                //create semaphore
+    wifi_init_sta();                                                          //initialize wifi
+    xTaskCreate(&http_client_task, "http_client_task", 4096, NULL, 5, NULL);  //create http client task
 }

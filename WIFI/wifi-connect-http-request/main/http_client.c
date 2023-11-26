@@ -2,10 +2,9 @@
 #include "esp_log.h"
 #include "esp_http_client.h"
 
-#include "http_client.h"
+#include "http_client.h"                //http client
 
-static const char *TAG = "HTTP_CLIENT";
-
+static const char *TAG = "HTTP_CLIENT"; //tag for logging
 
 //http client handle
 esp_err_t _http_event_handle(esp_http_client_event_t *evt)
@@ -37,6 +36,9 @@ esp_err_t _http_event_handle(esp_http_client_event_t *evt)
         case HTTP_EVENT_DISCONNECTED:
             ESP_LOGI(TAG, "HTTP_EVENT_DISCONNECTED");
             break;
+        case HTTP_EVENT_REDIRECT:
+            ESP_LOGD(TAG, "HTTP_EVENT_REDIRECT");
+            break;
     }
     return ESP_OK;
 }
@@ -52,7 +54,7 @@ void http_client_request()
     esp_err_t err = esp_http_client_perform(client);
 
     if (err == ESP_OK) {
-    ESP_LOGI(TAG, "Status = %d, content_length = %d",
+    ESP_LOGI(TAG, "Status = %i, content_length = %lli",
             esp_http_client_get_status_code(client),
             esp_http_client_get_content_length(client));
     }
