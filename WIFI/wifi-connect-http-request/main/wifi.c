@@ -49,7 +49,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
         } else {
             xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);                      //set wifi fail bit    
         }
-        ESP_LOGI(TAG,"connect to the AP fail");                                         //log connect to the AP fail
+        ESP_LOGE(TAG,"connect to the AP fail");                                         //log connect to the AP fail
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {             //if ip event and ip event station got ip
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;                     //get ip event data
         ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));                     //log got ip
@@ -104,7 +104,7 @@ void wifi_init_sta(void)
                  EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
         xSemaphoreGive(wifi_semaphore);                             //give semaphore
     } else if (bits & WIFI_FAIL_BIT) {                              //if wifi fail bit is set
-        ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",  //log failed to connect to ap
+        ESP_LOGE(TAG, "Failed to connect to SSID:%s, password:%s",  //log failed to connect to ap
                  EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
     } else {
         ESP_LOGE(TAG, "UNEXPECTED EVENT");                          //log unexpected event
