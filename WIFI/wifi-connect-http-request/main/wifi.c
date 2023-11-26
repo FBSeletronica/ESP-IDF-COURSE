@@ -34,7 +34,7 @@ static const char *TAG = "wifi library";    //tag for logging
 
 static int s_retry_num = 0;                 //retry number
 
-extern SemaphoreHandle_t wifi_semaphore;    //wifi semaphore declaration in main.c
+SemaphoreHandle_t wifi_semaphore;       //semaphore for wifi connection sincronization http client task
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data)
@@ -60,6 +60,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
 
 void wifi_init_sta(void)
 {
+    wifi_semaphore = xSemaphoreCreateBinary();                                //create semaphore
     s_wifi_event_group = xEventGroupCreate();               //create event group
     ESP_ERROR_CHECK(esp_netif_init());                      //initialize tcp/ip adapter
     ESP_ERROR_CHECK(esp_event_loop_create_default());       //create default event loop

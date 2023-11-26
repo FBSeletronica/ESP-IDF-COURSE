@@ -408,8 +408,8 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # Example Configuration
 #
-CONFIG_ESP_WIFI_SSID="myssid"
-CONFIG_ESP_WIFI_PASSWORD="mypassword"
+CONFIG_ESP_WIFI_SSID="Franzininho"
+CONFIG_ESP_WIFI_PASSWORD="92837474"
 CONFIG_ESP_MAXIMUM_RETRY=5
 # end of Example Configuration
 

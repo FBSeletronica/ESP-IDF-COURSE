@@ -6,6 +6,8 @@
 
 static const char *TAG = "HTTP_CLIENT"; //tag for logging
 
+extern SemaphoreHandle_t wifi_semaphore;    //semaphore for wifi connection sincronization http client task
+
 //http client handle
 esp_err_t _http_event_handle(esp_http_client_event_t *evt)
 {
@@ -59,4 +61,19 @@ void http_client_request()
             esp_http_client_get_content_length(client));
     }
     esp_http_client_cleanup(client);
+}
+
+
+//http client task
+void http_client_task(void *pvParameters)
+{
+
+  xSemaphoreTake(wifi_semaphore, portMAX_DELAY);
+
+  while(1)
+  {
+    ESP_LOGI(TAG, "http_client_task");                  //log http client task
+    http_client_request();                              //make http request
+    vTaskDelay(pdMS_TO_TICKS(10000));                   //delay 10 seconds
+  }
 }

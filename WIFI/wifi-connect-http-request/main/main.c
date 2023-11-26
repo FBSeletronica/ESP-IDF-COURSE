@@ -39,22 +39,6 @@
 //tag for logging
 static const char *TAG = "WIFI Example";
 
-SemaphoreHandle_t wifi_semaphore;       //semaphore for wifi connection
-
-//http client task
-void http_client_task(void *pvParameters)
-{
-
-  xSemaphoreTake(wifi_semaphore, portMAX_DELAY);
-
-  while(1)
-  {
-    ESP_LOGI(TAG, "http_client_task");                  //log http client task
-    http_client_request();                              //make http request
-    vTaskDelay(pdMS_TO_TICKS(10000));                   //delay 10 seconds
-  }
-}
-
 //main func
 void app_main(void)
 {
@@ -67,7 +51,6 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);                                                             //check error
 
     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");                                       //log wifi mode
-    wifi_semaphore = xSemaphoreCreateBinary();                                //create semaphore
     wifi_init_sta();                                                          //initialize wifi
     xTaskCreate(&http_client_task, "http_client_task", 4096, NULL, 5, NULL);  //create http client task
 }
