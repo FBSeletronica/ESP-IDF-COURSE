@@ -71,9 +71,6 @@ esp_err_t _http_event_handle(esp_http_client_event_t *evt)
             break;
          case HTTP_EVENT_REDIRECT:
             ESP_LOGD(TAG, "HTTP_EVENT_REDIRECT");
-            esp_http_client_set_header(evt->client, "From", "user@example.com");
-            esp_http_client_set_header(evt->client, "Accept", "text/html");
-            esp_http_client_set_redirection(evt->client);
             break;
     }
     return ESP_OK;
@@ -99,9 +96,16 @@ void http_client_request()
 //main func
 void app_main(void)
 {
-    vTaskDelay(1000);                                   //delay for wait USB CDC
     //initialize NVS
-    ESP_ERROR_CHECK(nvs_flash_init());                  //initialize NVS
+    esp_err_t ret = nvs_flash_init();
+
+    if(ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
+            ESP_ERROR_CHECK(nvs_flash_erase());
+            ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
+    
     ESP_ERROR_CHECK(esp_netif_init());                  //initialize network interface
     ESP_ERROR_CHECK(esp_event_loop_create_default());   //create default event loop
 
