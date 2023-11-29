@@ -207,9 +207,6 @@ void wifi_init(void){
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();    //initialize wifi configuration
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));                   //initialize wifi with configuration 
 
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));    //register event handler
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, NULL));   //register event handler
-
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));                                            //set wifi storage
 }
 
@@ -219,6 +216,9 @@ esp_err_t wifi_init_sta(void)
     s_wifi_event_group = xEventGroupCreate();               //create event group
     esp_netif_create_default_wifi_sta();                    //create default wifi station
     
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));    //register event handler
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, NULL));   //register event handler
+
     wifi_config_t wifi_config = {               //wifi configuration
         .sta = {
             .ssid = EXAMPLE_ESP_WIFI_SSID,              //wifi ssid
