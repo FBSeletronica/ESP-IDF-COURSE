@@ -60,7 +60,7 @@ void mqtt_app_start(void)
 }
 void mqtt_app_subscribe(char *topic,int qos)
 {
-    int msg_id = esp_mqtt_client_subscribe(client, topic, 0);
+    int msg_id = esp_mqtt_client_subscribe(client, topic, qos);
     ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
 }
 void mqtt_app_unsubscribe(char *topic)
