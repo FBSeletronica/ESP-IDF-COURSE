@@ -77,6 +77,7 @@ void mqtt_app_start(void)
     //config mqtt client
     esp_mqtt_client_config_t esp_mqtt_client_config = {
         .network.disable_auto_reconnect = false,                //enable auto reconnect
+        .session.keepalive = 30,                                //set keep alive to 30 seconds
         .broker.address.uri = CONFIG_BROKER_URL, //mqtt broker url
         .broker.address.port = 1883,                            //mqtt broker port
         .session.last_will = {

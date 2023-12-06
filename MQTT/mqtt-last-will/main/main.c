@@ -66,5 +66,6 @@ void app_main(void)
        if(i++ == 3) break;
     }   
 
+    mqtt_app_publish("asdfg/status","Stopped",0,0);                        //unsubscribe from topic esp32/led
     mqtt_app_stop();                                                      //stop mqtt client                                  
 }
