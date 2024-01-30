@@ -57,7 +57,7 @@ void app_main(void)
     
 
     //enable wakeup from light sleep using by uart
-    //ESP_LOGI(TAG, "Enabling UART wakeup");                           //console log
+    ESP_LOGI(TAG, "Enabling UART wakeup");                           //console log
     example_register_uart_wakeup();
 
     //wait for gpio wakeup pin to go high
@@ -88,7 +88,7 @@ void app_main(void)
                 wakeup_reason = "uart";
                 /* Hang-up for a while to switch and execuse the uart task
                  * Otherwise the chip may fall sleep again before running uart task */
-                vTaskDelay(1000);
+                vTaskDelay(pdMS_TO_TICKS(1000));
                 break;
             case ESP_SLEEP_WAKEUP_TIMER:                            //timer wakeup
                 wakeup_reason = "timer";                            //set wakeup reason
