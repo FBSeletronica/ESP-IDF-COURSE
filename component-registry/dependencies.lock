@@ -1,0 +1,21 @@
+dependencies:
+  espressif/pid_ctrl:
+    component_hash: 22af0226d7adbea821e4c1a8c1fa5dad23c883eb7457e95e19342883a37c44a3
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 0.2.0
+  espressif/ssd1306:
+    component_hash: 102cfc05b1b304862fa3f494e9dd955844bcc5f6cb16596e4ca5df3e6bf9fd0d
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.5~1
+  idf:
+    component_hash: null
+    source:
+      type: idf
+    version: 5.1.1
+manifest_hash: 562b57de3c50bea1f1481196775f4874141bd9de436bde2c06a9d38b6f97cef2
+target: esp32s2
+version: 1.0.0
