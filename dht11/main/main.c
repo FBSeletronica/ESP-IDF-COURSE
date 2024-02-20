@@ -31,9 +31,9 @@
 #include "ssd1306.h"
 
 //OLED GPIO Mapping
-#define OLED_SDA_GPIO 8
-#define OLED_SCL_GPIO 9
-#define OLED_RESET_GPIO -1
+#define OLED_SDA_GPIO 8         //define the SDA GPIO
+#define OLED_SCL_GPIO 9         //define the SCL GPIO
+#define OLED_RESET_GPIO -1      //define the RESET GPIO
 
 //DHT11 configuration
 static const dht_sensor_type_t sensor_type = DHT_TYPE_DHT11;
