@@ -46,12 +46,6 @@
 #include <ets_sys.h>
 #include <esp_idf_lib_helpers.h>
 
-#include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "driver/gpio.h"
-
-#include "dht.h"
 // DHT timer precision in microseconds
 #define DHT_TIMER_INTERVAL 2
 #define DHT_DATA_BITS 40
