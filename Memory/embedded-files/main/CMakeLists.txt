@@ -1,0 +1,10 @@
+idf_component_register(SRCS 
+                        "main.c"
+                    INCLUDE_DIRS 
+                    "."
+                    EMBED_TXTFILES 
+                    "../files/sample.txt"
+                    "../files/page.html"
+                    EMBED_FILES
+                    "../files/favicon.ico"                    
+                    )
