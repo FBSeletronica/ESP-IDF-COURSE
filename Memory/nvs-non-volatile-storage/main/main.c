@@ -15,8 +15,8 @@
 * This code is for teaching purposes only.
 * No warranty of any kind is provided.
 *******************************************************************************/
-#include<stdio.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
 #include <inttypes.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
