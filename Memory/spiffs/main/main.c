@@ -22,7 +22,7 @@
 #include "esp_log.h"
 #include "esp_spiffs.h"
 
-static const char *TAG = "example";
+static const char *TAG = "SPIFFS example";
 
 void app_main(void)
 {
@@ -94,7 +94,7 @@ void app_main(void)
         ESP_LOGE(TAG, "Failed to open file for writing");
         return;
     }
-    fprintf(f, "Hello World!\n");
+    fprintf(f, "Hello World from SPIFFS\n");
     fclose(f);
     ESP_LOGI(TAG, "File written");
 
