@@ -8,11 +8,11 @@ menu "Example configuration"
             GPIO Number of 1-Wire bus, or DQ. You might need an external
             pullup resistor on the bus. See README.md for details.
 
-    config EXAMPLE_DS18X20_ADDR
-        hex "Address of the sensor"
-        default "27041685c771ff28"
+    config EXAMPLE_DS18X20_MAX_SENSORS
+        int "Number of ds18x20 sensors on the 1-Wire bus"
+        default 8
         help
-            The address of the sensor. Change this to the address of your own
-            sensor. You can find out the address of your sensor by running
-            ds18x20_multi example.
+            Max number of ds18x20 sensors on th 1-Wire bus. If number of
+            sensors on the bus more than this value found on the bus, the rest
+            of sensors will be ignored.
 endmenu
