@@ -1,4 +1,4 @@
-## FreeRTOS Run Time Statd
+## FreeRTOS Run Time Stats
 This example shows how to get the FreeRTOS run time stats
 This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
 The course is available on https://cursos.embarcados.com.br
