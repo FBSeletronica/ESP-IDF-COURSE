@@ -1,0 +1,9 @@
+[2025-02-19 11:49:12] Apagando flash e gravando firmware...
+[2025-02-19 11:49:28] [SUCESSO] esp32s2 gravado corretamente na porta COM4.
+========================== 
+Início da Gravação: 19/02/2025 13:27:21,32 
+========================== 
+[19/02/2025 13:27:56,51] [SUCESSO] esp32s2 gravado corretamente. 
+[19/02/2025 13:28:30,40] [SUCESSO] esp32s2 gravado corretamente. 
+[2025-02-19 13:32:37] Apagando flash e gravando firmware...
+[2025-02-19 13:32:50] [SUCESSO] esp32s2 gravado corretamente na porta COM4.
