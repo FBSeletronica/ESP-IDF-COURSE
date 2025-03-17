@@ -8,5 +8,5 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(bin-no-cripto)
 
 
-# SPIFFS Image
-spiffs_create_partition_image(spiffs spiffs_image FLASH_IN_PROJECT)
+# FATFS Image
+fatfs_create_spiflash_image(storage fatfs_image FLASH_IN_PROJECT)

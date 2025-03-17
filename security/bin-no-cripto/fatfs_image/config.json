@@ -1,0 +1,8 @@
+{
+    "wifi_ssid": "SuperRedeWiFi",
+    "wifi_password": "senha123456",
+    "mqtt_server": "broker.exemplo.com",
+    "mqtt_user": "mqttuser",
+    "mqtt_password": "mqttpass123"
+  }
+  
