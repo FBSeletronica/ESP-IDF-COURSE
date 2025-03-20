@@ -3,3 +3,5 @@ build/
 .devcontainer/
 .vscode/
 
+CMakeFiles/
+CMakeCache.txt
