@@ -1,8 +1,6 @@
-## Extract sensitive data from a binary without criptography
+## Enabling Flash Encryption
 
-This example shows how to extract sensitive data from a binary file without criptography.
-The data is stored in flash using hardcoded strings, embedded files, NVS and SPIFFS.
-The binary is read using esptool and with a simple analysis, a lot of sensitive data can be readed easily.
+This example shows how to enable flash encryption
 
 This code is part of the course "Academia ESP32 Profissional" by Fábio Souza
 The course is available on https://cursos.embarcados.com.br
