@@ -35,7 +35,7 @@
 #endif
 
 // Define the GPIO pin for the button and LED
-#define GPIO_LED_PIN 33     // LED pin, GPIO33
+#define GPIO_LED_PIN 21     // LED pin, GPIO33
 #define GPIO_BUTTON_PIN 0  // Button pin, GPIO0
 #define DEBOUNCE_DELAY_MS 200  // Debounce time to avoid bouncing on the button
 
