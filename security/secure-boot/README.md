@@ -1,9 +1,13 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C6 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | -------- |
+## Secure Boot example
 
-# Advanced HTTPS OTA example
+   This example demonstrates how to enable secure boot and Flash encryption
+   on ESP32-S2. It includes a simple OTA update mechanism using HTTPS.
 
-This example is based on `esp_https_ota` component's APIs.
+   This example code is in the Public Domain (or CC0 licensed, at your option.)
+
+   Unless required by applicable law or agreed to in writing, this
+   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+   CONDITIONS OF ANY KIND, either express or implied.
 
 ## Configuration
 
