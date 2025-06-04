@@ -1,7 +1,7 @@
 /******************************************************************************
 * string_lib.c
 *
-* This file implements an example string library.
+* This file implements an example of a bad string library.
 * This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
 * The course is available on https://cursos.embarcados.com.br
 *
@@ -19,20 +19,34 @@
 #include "string_lib.h"
 
 /**
-* receives a c string and convert it to upper case.
+* receives a c string and convert it to uppercase.
 */
-void example_Upper(char *str){
+void string_Upper(char *str){
 
     for (size_t i = 0; str[i]; i++) {
-        str[i] -= 65;
+        if (str[i] == 32)
+            continue;
+        str[i] -= 32;
     }
     return;
 }
 
 /**
+* receives a c string and convert it to lowercase.
+*/
+void string_Lower(char *str){
+
+    for (size_t i = 0; str[i]; i++) {
+        if (str[i] == 32)
+            continue;
+        str[i] += 32;
+    }
+    return;
+}
+/**
 * receives a c string and invert the character order
 */
-void example_Mirror(char *str) {
+void string_Mirror(char *str) {
 
     char c1;
     size_t len = strlen(str);

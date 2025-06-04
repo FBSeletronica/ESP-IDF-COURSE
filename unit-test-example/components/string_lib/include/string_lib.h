@@ -1,7 +1,7 @@
 /******************************************************************************
 * string_lib.h
 *
-* This header provides an interface to an example string library.
+* This header provides an interface to an example of a bad string library.
 * This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
 * The course is available on https://cursos.embarcados.com.br
 *
@@ -16,11 +16,16 @@
 *******************************************************************************/
 
 /**
-* receives a c string and convert it to upper case.
+* receives a c string and convert it to uppercase.
 */
-void example_Upper(char *str);
+void string_Upper(char *str);
+
+/**
+* receives a c string and convert it to lowercase.
+*/
+void string_Lower(char *str);
 
 /**
 * receives a c string and invert the character order
 */
-void example_Mirror(char *str);
+void string_Mirror(char *str);
