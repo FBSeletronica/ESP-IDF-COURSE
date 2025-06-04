@@ -20,8 +20,8 @@
 #include "relay.h"
 
 /* Local variables for component testing */
-Relay test_relay;
-int pin = 21;
+static Relay test_relay;
+static int pin = 21;
 
 TEST_CASE("Test relay_init", "[relay]")
 {
@@ -30,7 +30,7 @@ TEST_CASE("Test relay_init", "[relay]")
     TEST_ASSERT_EQUAL(0, test_relay.state);
 }
 
-TEST_CASE("Test relay_turn_on" "[relay]")
+TEST_CASE("Test relay_turn_on", "[relay]")
 {
     relay_turn_on(&test_relay);
     TEST_ASSERT_EQUAL(1, test_relay.state);
