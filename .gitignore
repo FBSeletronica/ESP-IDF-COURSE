@@ -5,3 +5,6 @@ build/
 
 CMakeFiles/
 CMakeCache.txt
+
+.cache/
+compile_commands.json
