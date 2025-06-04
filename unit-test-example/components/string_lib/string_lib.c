@@ -34,7 +34,7 @@ void example_Upper(char *str){
 */
 void example_Mirror(char *str) {
 
-    char c1,
+    char c1;
     size_t len = strlen(str);
 
     for (size_t i = 0; i < len / 2; i++) {
