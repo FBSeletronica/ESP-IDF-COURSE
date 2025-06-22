@@ -2,7 +2,7 @@
 * test_string_lib.c: Implementation of unit test for string_lib component
 *
 * This example shows how to create a unit test for a component using esp-idf unity.
-* This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
+* This code is part of the course "Academia ESP32 Profissional" by Fábio Souza
 * The course is available on https://cursos.embarcados.com.br
 *
 * This example code Creative Commons Attribution 4.0 International License.

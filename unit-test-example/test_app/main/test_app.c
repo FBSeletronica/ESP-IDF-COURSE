@@ -2,7 +2,7 @@
 * test_app.c
 *
 * This file implements an example unit testing application running on ESP32.
-* This code is part of the course "Programe o ESP32 com ESP-IDF 5" by Fábio Souza
+* This code is part of the course "Academia ESP32 Profissional" by Fábio Souza
 * The course is available on https://cursos.embarcados.com.br
 *
 * This example code Creative Commons Attribution 4.0 International License.
