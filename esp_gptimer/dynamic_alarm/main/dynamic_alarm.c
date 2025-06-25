@@ -24,7 +24,6 @@
 #include "driver/gpio.h"
 #include "esp_err.h"
 #include "esp_log.h"
-#include "portmacro.h"
 
 #define BLED_GPIO (12)
 #define GLED_GPIO (BLED_GPIO + 1)
@@ -60,7 +59,7 @@ void app_main(void)
 	//Initilize timer and LED gpios
 	ESP_ERROR_CHECK(s_init(&my_data));
 
-	//Change alarm period on notification
+	//Change alarm period on received notification
 	while (1) {
 		if (ulTaskNotifyTake(pdFALSE, portMAX_DELAY)) {
 			if (decrementing) {
@@ -96,7 +95,7 @@ esp_err_t s_init(void* user_data)
 	if ((rc = gpio_config(&gpio_handle)))
 		return rc;
 
-	//Configuring periodic gptimer
+	//Configuring dynamic gptimer
 	const gptimer_config_t timer_config = {
 		.clk_src = GPTIMER_CLK_SRC_DEFAULT,
 		.direction = GPTIMER_COUNT_UP,
@@ -120,7 +119,8 @@ esp_err_t s_init(void* user_data)
 	gptimer_alarm_config_t alarm_config = {
 		.reload_count = 0,
 		.alarm_count = ((user_data_t*) user_data)->delta_t,
-		.flags.auto_reload_on_alarm = false
+		.flags.auto_reload_on_alarm = false //in a dynamic timer, we don't want to reload
+											//on alarm.
 	};
 	ESP_LOGI(s_TAG, "Starting timer");
 	if ((rc = gptimer_set_alarm_action(gptimer, &alarm_config)))

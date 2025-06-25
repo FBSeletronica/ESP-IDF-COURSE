@@ -88,8 +88,8 @@ esp_err_t s_init(void)
 	
 	gptimer_alarm_config_t alarm_config = {
 		.reload_count = 0,
-		.alarm_count = 100000,
-		.flags.auto_reload_on_alarm = true
+		.alarm_count = 100000, //eq to 0.1s
+		.flags.auto_reload_on_alarm = true //will reset the count on alarm
 	};
 	ESP_LOGI(s_TAG, "Starting timer with period of %uus", (unsigned) alarm_config.alarm_count);
 	if ((rc = gptimer_set_alarm_action(gptimer, &alarm_config)))
