@@ -95,7 +95,7 @@ esp_err_t s_init(void* user_data)
 	if ((rc = gpio_config(&gpio_handle)))
 		return rc;
 
-	//Configuring dynamic gptimer
+	//Configuring gptimer
 	const gptimer_config_t timer_config = {
 		.clk_src = GPTIMER_CLK_SRC_DEFAULT,
 		.direction = GPTIMER_COUNT_UP,
@@ -105,10 +105,10 @@ esp_err_t s_init(void* user_data)
 	if ((rc = gptimer_new_timer(&timer_config, &gptimer)))
 		return rc;
 
+	ESP_LOGI(s_TAG, "Registering Callback");
 	const gptimer_event_callbacks_t timer_callbacks = {
 		.on_alarm = s_timer_cb
 	};
-	ESP_LOGI(s_TAG, "Registering Callback");
 	if ((rc = gptimer_register_event_callbacks(gptimer, &timer_callbacks, user_data)))
 		return rc;
 
@@ -116,16 +116,17 @@ esp_err_t s_init(void* user_data)
 	if ((rc = gptimer_enable(gptimer)))
 		return rc; //Timer has not started yet!
 	
+	ESP_LOGI(s_TAG, "Configuring the alarm");
 	gptimer_alarm_config_t alarm_config = {
 		.reload_count = 0,
 		.alarm_count = ((user_data_t*) user_data)->delta_t,
 		.flags.auto_reload_on_alarm = false //in a dynamic timer, we don't want to reload
 											//on alarm.
 	};
-	ESP_LOGI(s_TAG, "Starting timer");
 	if ((rc = gptimer_set_alarm_action(gptimer, &alarm_config)))
 		return rc;
 	
+	ESP_LOGI(s_TAG, "Starting timer");
 	rc = gptimer_start(gptimer);
 	
 	return rc;

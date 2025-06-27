@@ -65,7 +65,7 @@ esp_err_t s_init(void)
 	if ((rc = gpio_config(&gpio_handle)))
 		return rc;
 
-	//Configuring periodic gptimer
+	//Configuring gptimer
 	const gptimer_config_t timer_config = {
 		.clk_src = GPTIMER_CLK_SRC_DEFAULT,
 		.direction = GPTIMER_COUNT_UP,
@@ -75,10 +75,10 @@ esp_err_t s_init(void)
 	if ((rc = gptimer_new_timer(&timer_config, &gptimer)))
 		return rc;
 
+	ESP_LOGI(s_TAG, "Registering Callback");
 	const gptimer_event_callbacks_t timer_callbacks = {
 		.on_alarm = s_timer_cb
 	};
-	ESP_LOGI(s_TAG, "Registering Callback");
 	if ((rc = gptimer_register_event_callbacks(gptimer, &timer_callbacks, NULL)))
 		return rc;
 
@@ -86,15 +86,16 @@ esp_err_t s_init(void)
 	if ((rc = gptimer_enable(gptimer)))
 		return rc; //Timer has not started yet!
 	
+	ESP_LOGI(s_TAG, "Configuring the alarm");
 	gptimer_alarm_config_t alarm_config = {
 		.reload_count = 0,
 		.alarm_count = 100000, //eq to 0.1s
 		.flags.auto_reload_on_alarm = true //will reset the count on alarm
 	};
-	ESP_LOGI(s_TAG, "Starting timer with period of %uus", (unsigned) alarm_config.alarm_count);
 	if ((rc = gptimer_set_alarm_action(gptimer, &alarm_config)))
 		return rc;
 	
+	ESP_LOGI(s_TAG, "Starting timer with period of %uus", (unsigned) alarm_config.alarm_count);
 	rc = gptimer_start(gptimer);
 	
 	return rc;
