@@ -27,7 +27,7 @@ void app_main(void)
 {
     /* some data to encode */
     int solution = 42;
-    char mojo[] = "I program with esp-idf!!";
+    char mojo[] = "I develop with Franzininho WiFi!!";
     float f1 = 3.14, f2 = 6.5821, f3 = -16;
     bool led_1 = true;
 
@@ -40,16 +40,16 @@ void app_main(void)
     /* Lib initialization */
     json_gen_str_start(&json_ctx, jstr, BUFFER_SIZE, NULL, NULL);
 
-    ESP_ERROR_CHECK(json_gen_start_object(&json_ctx));                    //add {
-    ESP_ERROR_CHECK(json_gen_obj_set_int(&json_ctx, "solution", solution));   //add "solution" : "42"
-    ESP_ERROR_CHECK(json_gen_obj_set_string(&json_ctx, "mojo", mojo));        //add "mojo" : "I program with esp-idf!!"
-    ESP_ERROR_CHECK(json_gen_push_array(&json_ctx, "constants"));         //add "constants" : [
-    ESP_ERROR_CHECK(json_gen_arr_set_float(&json_ctx, f1));               //add "3.14"
-    ESP_ERROR_CHECK(json_gen_arr_set_float(&json_ctx, f2));               //add "6.5821"
-    ESP_ERROR_CHECK(json_gen_arr_set_float(&json_ctx, f3));               //add "-16.0"
-    ESP_ERROR_CHECK(json_gen_pop_array(&json_ctx));                       //add ]
-    ESP_ERROR_CHECK(json_gen_obj_set_bool(&json_ctx, "led_1", led_1));    //add "led_1" : "true"
-    ESP_ERROR_CHECK(json_gen_end_object(&json_ctx));                      //add }
+    ESP_ERROR_CHECK(json_gen_start_object(&json_ctx));                        //add {
+    ESP_ERROR_CHECK(json_gen_obj_set_int(&json_ctx, "solution", solution));   //add "solution" : 42,
+    ESP_ERROR_CHECK(json_gen_obj_set_string(&json_ctx, "mojo", mojo));        //add "mojo" : "I develop with Franzininho WiFi!!",
+    ESP_ERROR_CHECK(json_gen_push_array(&json_ctx, "constants"));             //add "constants" : [
+    ESP_ERROR_CHECK(json_gen_arr_set_float(&json_ctx, f1));                   //add 3.14,
+    ESP_ERROR_CHECK(json_gen_arr_set_float(&json_ctx, f2));                   //add 6.5821,
+    ESP_ERROR_CHECK(json_gen_arr_set_float(&json_ctx, f3));                   //add -16.0
+    ESP_ERROR_CHECK(json_gen_pop_array(&json_ctx));                           //add ],
+    ESP_ERROR_CHECK(json_gen_obj_set_bool(&json_ctx, "led_1", led_1));        //add "led_1" : true
+    ESP_ERROR_CHECK(json_gen_end_object(&json_ctx));                          //add }
 
     /* Clear json_ctx */
     ESP_ERROR_CHECK(json_gen_end_object(&json_ctx));
