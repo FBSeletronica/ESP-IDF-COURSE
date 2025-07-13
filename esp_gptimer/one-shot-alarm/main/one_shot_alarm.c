@@ -145,9 +145,6 @@ static esp_err_t s_init(void)
 	if ((ret = gptimer_set_alarm_action(gptimer, &alarm_config)))
 		return ret;
 	
-	ESP_LOGI(TAG, "Starting timer with period of %uus", (unsigned) alarm_config.alarm_count);
-	ret = gptimer_start(gptimer);
-	
 	return ret;
 }
 
