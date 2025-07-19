@@ -102,7 +102,7 @@ esp_err_t s_init(void)
 
 esp_err_t s_release(void)
 {
-	    esp_err_t ret;
+	esp_err_t ret;
 
 	//Stop GPtimer
     ESP_LOGI(TAG, "Stopping GPTimer");
