@@ -49,9 +49,10 @@ void app_main(void)
     ESP_ERROR_CHECK(json_gen_arr_set_float(&json_ctx, f3));                   //add -16.0
     ESP_ERROR_CHECK(json_gen_pop_array(&json_ctx));                           //add ],
     ESP_ERROR_CHECK(json_gen_obj_set_bool(&json_ctx, "led_1", led_1));        //add "led_1" : true
+    ESP_ERROR_CHECK(json_gen_obj_set_int(&json_ctx,"TESTE", 1234));           //add "TESTE" : 1234  
     ESP_ERROR_CHECK(json_gen_end_object(&json_ctx));                          //add }
 
     /* Clear json_ctx */
-    ESP_ERROR_CHECK(json_gen_end_object(&json_ctx));
-    printf("My JSON string:\n%s\n", jstr);
+    int json_len = json_gen_str_end(&json_ctx);
+    printf("My JSON string[%d]:\n%s\n",json_len, jstr);
 }
