@@ -6,6 +6,8 @@ sdkconfig
 sdkconfig.old
 CMakeFiles/
 CMakeCache.txt
+managed_components/
+dependencies.lock
 
 .cache/
 compile_commands.json
