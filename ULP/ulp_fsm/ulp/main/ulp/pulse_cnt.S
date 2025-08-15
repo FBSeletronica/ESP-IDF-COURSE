@@ -104,6 +104,9 @@ read_io_high:
 	rsh r0, r0, r3
 
 read_done:
+	/* We only care about bit0 corresponding to our configure IO,
+	 * so we reset the other bits
+	 */
 	and r0, r0, 1
 	/* State of input changed? */
 	move r3, next_edge

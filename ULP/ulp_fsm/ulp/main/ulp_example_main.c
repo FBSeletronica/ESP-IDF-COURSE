@@ -24,6 +24,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#define BUTTON_GPIO (4)
+
 extern const uint8_t ulp_main_bin_start[] asm("_binary_ulp_main_bin_start");
 extern const uint8_t ulp_main_bin_end[]   asm("_binary_ulp_main_bin_end");
 
@@ -60,7 +62,7 @@ static void init_ulp_program(void)
     ESP_ERROR_CHECK(err);
 
     /* GPIO used for pulse counting. */
-    gpio_num_t gpio_num = GPIO_NUM_3;
+    gpio_num_t gpio_num = BUTTON_GPIO;
     int rtcio_num = rtc_io_number_get(gpio_num);
     assert(rtc_gpio_is_valid_gpio(gpio_num) && "GPIO used for pulse counting must be an RTC IO");
 
@@ -79,7 +81,7 @@ static void init_ulp_program(void)
     ulp_io_number = rtcio_num; /* map from GPIO# to RTC_IO# */
     ulp_edge_count_to_wake_up = 10;
 
-    /* Initialize selected GPIO as RTC IO, enable input, disable pullup and pulldown */
+    /* Initialize selected GPIO as RTC IO, enable input, enable pullup and disable pulldown */
     rtc_gpio_init(gpio_num);
     rtc_gpio_set_direction(gpio_num, RTC_GPIO_MODE_INPUT_ONLY);
     rtc_gpio_pulldown_dis(gpio_num);
