@@ -114,4 +114,5 @@ static void ulp_interrupt_handler(void *args)
 {
     BaseType_t task_woken = pdFALSE;
     vTaskNotifyGiveFromISR(app_main_task, &task_woken);
+    portYIELD_FROM_ISR(task_woken);
 }
