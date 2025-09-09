@@ -1,0 +1,3 @@
+dependencies:
+  espressif/led_strip: ^2.4.1
+  fbseletronica/relay: ^1.0.1
