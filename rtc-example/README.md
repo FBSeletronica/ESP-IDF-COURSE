@@ -4,7 +4,7 @@ This example demonstrates how to implement a Real-Time Clock (RTC) using the ESP
 
 ## Overview
 
-The example is part of the course **"Programe o ESP32 com ESP-IDF 5"** by Fábio Souza. The course provides a comprehensive guide to programming the ESP32 using the ESP-IDF framework.
+The example is part of the course **"Academia ESP32 Profissional"** by Fábio Souza. The course provides a comprehensive guide to programming the ESP32 using the ESP-IDF framework.
 
 For more information, visit: [https://cursos.embarcados.com.br](https://cursos.embarcados.com.br)
 
@@ -27,7 +27,7 @@ For license details, visit: [http://creativecommons.org/licenses/by/4.0/](http:/
 ## Author
 
 **Fábio Souza**  
-This code is part of the educational content created for the "Programe o ESP32 com ESP-IDF 5" course.
+This code is part of the educational content created for the "Academia ESP32 Profissional" course.
 
 ## How to Use
 
@@ -57,3 +57,12 @@ Feel free to use and modify the code for your learning and projects, adhering to
 ---
 
 **Happy Coding!**
+
+This code is part of the course "Academia ESP32 Profissional" by Fábio Souza
+The course is available on https://cursos.embarcados.com.br
+
+This example code Creative Commons Attribution 4.0 International License. When using the code, you must keep the above copyright notice, this list of conditions and the following disclaimer in the source code. (http://creativecommons.org/licenses/by/4.0/)
+
+    Author: Fábio Souza
+    This code is for teaching purposes only.
+    No warranty of any kind is provided.

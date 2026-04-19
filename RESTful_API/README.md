@@ -139,3 +139,12 @@ I (137485) esp-rest: Light control: red = 50, green = 85, blue = 28
    * When you choose to deploy website to SPI flash, make sure the `dist` directory has been generated before you building this example.
 
 (For any technical queries, please open an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you as soon as possible.)
+
+This code is part of the course "Academia ESP32 Profissional" by Fábio Souza
+The course is available on https://cursos.embarcados.com.br
+
+This example code Creative Commons Attribution 4.0 International License. When using the code, you must keep the above copyright notice, this list of conditions and the following disclaimer in the source code. (http://creativecommons.org/licenses/by/4.0/)
+
+    Author: Fábio Souza
+    This code is for teaching purposes only.
+    No warranty of any kind is provided.

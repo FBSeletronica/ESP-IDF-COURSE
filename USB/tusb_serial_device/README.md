@@ -83,3 +83,12 @@ The monitor tool will also print the communication process:
 I (12438) example: Data from channel 0:
 I (12438) example: 0x3ffbfea0   45 73 70 72 65 73 73 69  66 0d                    |Espressif.|
 ```
+
+This code is part of the course "Academia ESP32 Profissional" by Fábio Souza
+The course is available on https://cursos.embarcados.com.br
+
+This example code Creative Commons Attribution 4.0 International License. When using the code, you must keep the above copyright notice, this list of conditions and the following disclaimer in the source code. (http://creativecommons.org/licenses/by/4.0/)
+
+    Author: Fábio Souza
+    This code is for teaching purposes only.
+    No warranty of any kind is provided.
