@@ -11,3 +11,6 @@ dependencies.lock
 
 .cache/
 compile_commands.json
+
+.codex
+
